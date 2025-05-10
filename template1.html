@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrintWave | Professional Screen Printing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+        }
+
+        .theme-blue {
+            --primary: #3b82f6;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+        }
+
+        .theme-yellow {
+            --primary: #f59e0b;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+        }
+
+        .theme-green {
+            --primary: #10b981;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .border-primary {
+            border-color: var(--primary);
+        }
+
+        .bg-secondary {
+            background-color: var(--secondary);
+        }
+
+        .text-secondary {
+            color: var(--secondary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #f3f4f6;
+        }
+
+        .dark-mode .dark\:bg-dark {
+            background-color: #2d2d2d;
+        }
+
+        .dark-mode .dark\:text-light {
+            color: #f3f4f6;
+        }
+
+        .sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .process-step {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .animate-in {
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.8s;
+        }
+
+        .delay-5 {
+            animation-delay: 1s;
+        }
+
+        .hero-image {
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+        }
+
+        @media (max-width: 768px) {
+            .hero-image {
+                clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+
+<body class="theme-blue font-sans transition-colors duration-300">
+    <!-- Sidebar -->
+    <div class="sidebar fixed right-0 top-0 h-full w-64 bg-white dark:bg-dark shadow-lg z-50 p-4 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="text-xl font-bold">Theme Settings</h3>
+            <button id="close-sidebar" class="text-gray-600 dark:text-light hover:text-primary">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+
+        <div class="mb-6">
+            <h4 class="font-semibold mb-3 text-gray-700 dark:text-light">Color Theme</h4>
+            <div class="flex space-x-3">
+                <button data-theme="blue"
+                    class="theme-btn bg-blue-500 w-10 h-10 rounded-full border-2 border-transparent hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"></button>
+                <button data-theme="yellow"
+                    class="theme-btn bg-yellow-500 w-10 h-10 rounded-full border-2 border-transparent hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"></button>
+                <button data-theme="green"
+                    class="theme-btn bg-green-500 w-10 h-10 rounded-full border-2 border-transparent hover:border-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"></button>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="font-semibold mb-3 text-gray-700 dark:text-light">Dark Mode</h4>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="dark-mode-toggle" class="sr-only peer">
+                <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                </div>
+                <span class="ml-3 text-sm font-medium text-gray-700 dark:text-light">Toggle</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Settings Button -->
+    <button id="settings-btn"
+        class="fixed right-6 bottom-6 bg-primary text-white w-12 h-12 rounded-full shadow-lg z-40 flex items-center justify-center hover:bg-opacity-90 transition-all">
+        <i class="fas fa-cog text-xl"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white dark:bg-dark shadow-sm z-40 transition-colors duration-300">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-primary">Print<span class="text-secondary">Wave</span></a>
+
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 dark:text-light hover:text-primary transition">Home</a>
+                    <a href="#about" class="text-gray-700 dark:text-light hover:text-primary transition">About</a>
+                    <a href="#services" class="text-gray-700 dark:text-light hover:text-primary transition">Services</a>
+                    <a href="#process" class="text-gray-700 dark:text-light hover:text-primary transition">Process</a>
+                    <a href="#projects" class="text-gray-700 dark:text-light hover:text-primary transition">Projects</a>
+                    <a href="#contact" class="text-gray-700 dark:text-light hover:text-primary transition">Contact</a>
+                </div>
+
+                <button class="md:hidden focus:outline-none" id="mobile-menu-button">
+                    <i class="fas fa-bars text-gray-700 dark:text-light text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="md:hidden hidden mt-4" id="mobile-menu">
+                <div class="flex flex-col space-y-3">
+                    <a href="#home" class="text-gray-700 dark:text-light hover:text-primary transition">Home</a>
+                    <a href="#about" class="text-gray-700 dark:text-light hover:text-primary transition">About</a>
+                    <a href="#services" class="text-gray-700 dark:text-light hover:text-primary transition">Services</a>
+                    <a href="#process" class="text-gray-700 dark:text-light hover:text-primary transition">Process</a>
+                    <a href="#projects" class="text-gray-700 dark:text-light hover:text-primary transition">Projects</a>
+                    <a href="#contact" class="text-gray-700 dark:text-light hover:text-primary transition">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home"
+        class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-dark">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <h1
+                        class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-gray-800 dark:text-light">
+                        Professional <span class="text-primary">Screen Printing</span> Services
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+                        High-quality custom screen printing for businesses, events, and personal projects. Bring your
+                        designs to life with our expert team.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#contact"
+                            class="bg-primary hover:bg-opacity-90 text-white px-6 py-3 rounded-lg font-medium transition">
+                            Get a Quote
+                        </a>
+                        <a href="#process"
+                            class="border border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-medium transition">
+                            Our Process
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                            alt="Screen printing process"
+                            class="hero-image w-full h-auto rounded-lg shadow-xl floating">
+                        <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-secondary rounded-lg shadow-lg z-0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section class="py-12 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-800 dark:text-light">Trusted By</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                <div class="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition">
+                    <img src="https://via.placeholder.com/150x80?text=Brand+1" alt="Client logo"
+                        class="h-12 object-contain">
+                </div>
+                <div class="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition">
+                    <img src="https://via.placeholder.com/150x80?text=Brand+2" alt="Client logo"
+                        class="h-12 object-contain">
+                </div>
+                <div class="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition">
+                    <img src="https://via.placeholder.com/150x80?text=Brand+3" alt="Client logo"
+                        class="h-12 object-contain">
+                </div>
+                <div class="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition">
+                    <img src="https://via.placeholder.com/150x80?text=Brand+4" alt="Client logo"
+                        class="h-12 object-contain">
+                </div>
+                <div class="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition">
+                    <img src="https://via.placeholder.com/150x80?text=Brand+5" alt="Client logo"
+                        class="h-12 object-contain">
+                </div>
+                <div class="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition">
+                    <img src="https://via.placeholder.com/150x80?text=Brand+6" alt="Client logo"
+                        class="h-12 object-contain">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 md:py-24 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0 md:pr-12">
+                    <!-- <img src="https://images.unsplash.com/photo-1526758097130-bab247274f58?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" -->
+                    <!-- alt="Our workshop" class="w-full h-auto rounded-lg shadow-lg"> -->
+                </div>
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-light">
+                        About <span class="text-primary">PrintWave</span>
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        Founded in 2010, PrintWave has grown from a small garage operation to one of the most respected
+                        screen printing businesses in the region. Our team of skilled artisans combines traditional
+                        techniques with modern technology to deliver exceptional results.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        We pride ourselves on our attention to detail, commitment to quality, and dedication to customer
+                        satisfaction. Whether you need 10 shirts or 10,000, we treat every order with the same level of
+                        care and professionalism.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-3">
+                                <i class="fas fa-medal text-primary text-xl"></i>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">Premium Quality</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-3">
+                                <i class="fas fa-truck text-primary text-xl"></i>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">Fast Turnaround</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-3">
+                                <i class="fas fa-palette text-primary text-xl"></i>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">Custom Designs</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-3">
+                                <i class="fas fa-headset text-primary text-xl"></i>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">Expert Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-light">Our <span
+                        class="text-primary">Services</span></h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Comprehensive screen printing solutions tailored to your needs
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition process-step">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-tshirt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-light">Apparel Printing</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        High-quality printing on t-shirts, hoodies, polos, and more. Perfect for events, teams, and
+                        promotional needs.
+                    </p>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition process-step delay-1">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-trophy text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-light">Awards & Trophies</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Custom printed awards, medals, and trophies for competitions, corporate recognition, and special
+                        events.
+                    </p>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition process-step delay-2">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-sign text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-light">Signage & Banners</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Durable, vibrant signage for businesses, events, and retail spaces. Indoor and outdoor options
+                        available.
+                    </p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition process-step">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-box-open text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-light">Packaging</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Custom printed boxes, bags, and packaging materials to elevate your brand's unboxing experience.
+                    </p>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition process-step delay-1">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-mug-hot text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-light">Promotional Items</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Mugs, pens, bags, and more printed with your logo or design. Perfect for giveaways and corporate
+                        gifts.
+                    </p>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md hover:shadow-xl transition process-step delay-2">
+                    <div class="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-paint-brush text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800 dark:text-light">Design Services</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Our creative team can help bring your ideas to life with custom artwork and design services.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="py-16 md:py-24 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-light">Our <span
+                        class="text-primary">Process</span></h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Simple steps from concept to finished product
+                </p>
+            </div>
+
+            <div class="relative">
+                <!-- Process Line -->
+                <div class="hidden md:block absolute left-1/2 h-full w-1 bg-primary bg-opacity-20 top-0"></div>
+
+                <!-- Process Steps -->
+                <div class="relative z-10">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col md:flex-row items-center md:items-start mb-16 process-step">
+                        <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right">
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-light">Consultation</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                We start by understanding your needs, budget, and timeline. Our experts will guide you
+                                through material choices, design options, and printing techniques.
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 flex justify-center md:justify-start">
+                            <div
+                                class="bg-primary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center">
+                                <span class="text-primary text-2xl font-bold">1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col md:flex-row items-center md:items-start mb-16 process-step delay-1">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1">
+                            <div
+                                class="bg-primary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center ml-auto md:ml-0">
+                                <span class="text-primary text-2xl font-bold">2</span>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 mb-8 md:mb-0 order-1 md:order-2">
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-light">Design & Artwork</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Our design team works with you to create or refine your artwork. We ensure it's
+                                print-ready and optimized for the best results on your chosen materials.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex flex-col md:flex-row items-center md:items-start mb-16 process-step delay-2">
+                        <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right">
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-light">Screen Preparation</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Each color in your design gets its own screen. We coat, expose, and wash screens with
+                                precision to capture every detail of your artwork.
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 flex justify-center md:justify-start">
+                            <div
+                                class="bg-primary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center">
+                                <span class="text-primary text-2xl font-bold">3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex flex-col md:flex-row items-center md:items-start mb-16 process-step delay-3">
+                        <div class="md:w-1/2 md:pr-12 order-2 md:order-1">
+                            <div
+                                class="bg-primary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center ml-auto md:ml-0">
+                                <span class="text-primary text-2xl font-bold">4</span>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 mb-8 md:mb-0 order-1 md:order-2">
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-light">Printing</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Our skilled printers apply each color layer by layer with perfect registration. We
+                                monitor quality throughout the entire print run.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="flex flex-col md:flex-row items-center md:items-start process-step delay-4">
+                        <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 text-right">
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-light">Curing & Finishing</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Prints are heat-cured for durability, then inspected, folded, and packaged. We conduct
+                                final quality checks before delivery.
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 flex justify-center md:justify-start">
+                            <div
+                                class="bg-primary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center">
+                                <span class="text-primary text-2xl font-bold">5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-light">Our <span
+                        class="text-primary">Projects</span></h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    A showcase of our recent work and satisfied clients
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div
+                    class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition process-step">
+                    <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                        alt="Project 1" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-light">Corporate Event Shirts</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Custom t-shirts for a 500-person corporate retreat with multi-color design.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">T-Shirts</span>
+                            <span class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">4-Color
+                                Print</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition process-step delay-1">
+                    <img src="https://images.unsplash.com/photo-1576566588021-8a5df5af02f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                        alt="Project 2" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-light">Music Festival Merch</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Limited edition hoodies and shirts for a 3-day music festival.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">Hoodies</span>
+                            <span class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">Special
+                                Inks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition process-step delay-2">
+                    <img src="https://images.unsplash.com/photo-1618005198919-d3d4b5a9eadb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                        alt="Project 3" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-light">Sports Team Uniforms</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Custom jerseys for a local soccer league with player names and numbers.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">Jerseys</span>
+                            <span
+                                class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-full text-sm">Sublimation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="#contact"
+                    class="inline-block bg-primary hover:bg-opacity-90 text-white px-8 py-3 rounded-lg font-medium transition">
+                    Start Your Project
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 md:py-24 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-light">What Our <span
+                        class="text-primary">Clients Say</span></h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Don't just take our word for it - hear from our satisfied customers
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md process-step">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        "PrintWave delivered exceptional quality shirts for our company retreat. The colors were vibrant
+                        and the print has held up perfectly through many washes. Their team was professional and met our
+                        tight deadline."
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson"
+                            class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 dark:text-light">Sarah Johnson</h4>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Marketing Director, TechCorp</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md process-step delay-1">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        "We've used PrintWave for three years of festival merchandise and they never disappoint. Their
+                        attention to detail and creative input elevated our designs. The glow-in-the-dark ink on last
+                        year's shirts was a huge hit!"
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Rodriguez"
+                            class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 dark:text-light">Michael Rodriguez</h4>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Event Coordinator, SoundWave Fest</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-8 rounded-lg shadow-md process-step delay-2">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        "As a small business, I needed high-quality branded items without the huge minimums. PrintWave
+                        worked with my budget and delivered beautiful tote bags and t-shirts that perfectly represent my
+                        brand. Will definitely use them again."
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emily Chen"
+                            class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800 dark:text-light">Emily Chen</h4>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Owner, Bloom Boutique</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-light">Get In <span
+                        class="text-primary">Touch</span></h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Ready to start your project? Contact us today for a free quote.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2 process-step">
+                    <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-light">Send Us a Message</h3>
+                        <form id="contact-form" class="space-y-4">
+                            <div>
+                                <label for="name" class="block text-gray-700 dark:text-gray-300 mb-2">Name</label>
+                                <input type="text" id="name" name="name"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:bg-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                <input type="email" id="email" name="email"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:bg-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-gray-700 dark:text-gray-300 mb-2">Phone</label>
+                                <input type="tel" id="phone" name="phone"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:bg-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="project" class="block text-gray-700 dark:text-gray-300 mb-2">Project
+                                    Type</label>
+                                <select id="project" name="project"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:bg-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                                    <option value="">Select a project type</option>
+                                    <option value="t-shirts">T-Shirts</option>
+                                    <option value="hoodies">Hoodies</option>
+                                    <option value="signage">Signage/Banners</option>
+                                    <option value="promo">Promotional Items</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="message" class="block text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                                <textarea id="message" name="message" rows="4"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:bg-gray-600 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="bg-primary hover:bg-opacity-90 text-white px-6 py-3 rounded-lg font-medium transition w-full">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 process-step delay-1">
+                    <div class="bg-white dark:bg-gray-700 p-8 rounded-lg shadow-md h-full">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-light">Contact Information</h3>
+
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                    <i class="fas fa-map-marker-alt text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 dark:text-light mb-1">Our Location</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">123 Print Street, Inkville, CA 90210</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                    <i class="fas fa-phone-alt text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 dark:text-light mb-1">Phone Number</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">(555) 123-4567</p>
+                                    <p class="text-gray-600 dark:text-gray-300 text-sm">Mon-Fri: 9am-5pm PST</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                    <i class="fas fa-envelope text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 dark:text-light mb-1">Email Address</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">info@printwave.com</p>
+                                    <p class="text-gray-600 dark:text-gray-300">sales@printwave.com</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                    <i class="fas fa-clock text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 dark:text-light mb-1">Business Hours</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">Monday - Friday: 8:00 AM - 6:00 PM</p>
+                                    <p class="text-gray-600 dark:text-gray-300">Saturday: 9:00 AM - 2:00 PM</p>
+                                    <p class="text-gray-600 dark:text-gray-300">Sunday: Closed</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <h4 class="font-bold text-gray-800 dark:text-light mb-4">Find Us On Map</h4>
+                            <div class="bg-gray-200 dark:bg-gray-600 h-64 rounded-lg overflow-hidden">
+                                <!-- Google Maps Placeholder -->
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215373510518!2d-73.9878449241646!3d40.74844097138975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1689878888888!5m2!1sen!2sus"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 md:py-24 bg-white dark:bg-dark">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-light">Frequently <span
+                        class="text-primary">Asked Questions</span></h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                    Answers to common questions about our screen printing services
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-4">
+                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm process-step">
+                        <button class="flex justify-between items-center w-full focus:outline-none faq-toggle">
+                            <h3 class="text-lg font-semibold text-left text-gray-800 dark:text-light">What's your
+                                minimum order quantity?</h3>
+                            <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content mt-3 hidden">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Our minimum order quantity is 24 pieces for most apparel items. For promotional products
+                                and specialty items, minimums may vary. We can accommodate smaller quantities for sample
+                                orders or test prints.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm process-step delay-1">
+                        <button class="flex justify-between items-center w-full focus:outline-none faq-toggle">
+                            <h3 class="text-lg font-semibold text-left text-gray-800 dark:text-light">How long does the
+                                printing process take?</h3>
+                            <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content mt-3 hidden">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Standard turnaround time is 7-10 business days from approval of artwork. Rush services
+                                are available for an additional fee, with options for 3-day or 5-day turnaround. Complex
+                                designs or large orders may require more time.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm process-step delay-2">
+                        <button class="flex justify-between items-center w-full focus:outline-none faq-toggle">
+                            <h3 class="text-lg font-semibold text-left text-gray-800 dark:text-light">Can you help with
+                                design?</h3>
+                            <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content mt-3 hidden">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Absolutely! Our in-house design team can create custom artwork based on your ideas,
+                                refine existing designs, or provide templates to get you started. Design services start
+                                at $75/hour with flat-rate packages available for common projects.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm process-step">
+                        <button class="flex justify-between items-center w-full focus:outline-none faq-toggle">
+                            <h3 class="text-lg font-semibold text-left text-gray-800 dark:text-light">What file formats
+                                do you accept for artwork?</h3>
+                            <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content mt-3 hidden">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                We prefer vector files (AI, EPS, PDF) with all text converted to outlines. We also
+                                accept high-resolution (300dpi) raster files (PSD, TIFF, PNG). For best results, artwork
+                                should be in CMYK color mode and include all fonts used.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-sm process-step delay-1">
+                        <button class="flex justify-between items-center w-full focus:outline-none faq-toggle">
+                            <h3 class="text-lg font-semibold text-left text-gray-800 dark:text-light">Do you offer
+                                eco-friendly printing options?</h3>
+                            <i class="fas fa-chevron-down text-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content mt-3 hidden">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Yes! We offer water-based inks (which are softer and more eco-friendly than plastisol),
+                                organic cotton garments, and recycled materials. Our facility follows sustainable
+                                practices including waste reduction and responsible chemical disposal.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 md:py-24 bg-primary text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Printing Project?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+                Get a free quote today and let's bring your ideas to life with premium screen printing.
+            </p>
+            <a href="#contact"
+                class="inline-block bg-white text-primary hover:bg-opacity-90 px-8 py-3 rounded-lg font-medium transition shadow-lg">
+                Request a Quote
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-4">PrintWave</h3>
+                    <p class="mb-4">
+                        Professional screen printing services with a commitment to quality and customer satisfaction.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#about" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="#services" class="hover:text-white transition">Services</a></li>
+                        <li><a href="#process" class="hover:text-white transition">Our Process</a></li>
+                        <li><a href="#projects" class="hover:text-white transition">Projects</a></li>
+                        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition">Apparel Printing</a></li>
+                        <li><a href="#" class="hover:text-white transition">Signage & Banners</a></li>
+                        <li><a href="#" class="hover:text-white transition">Promotional Items</a></li>
+                        <li><a href="#" class="hover:text-white transition">Packaging</a></li>
+                        <li><a href="#" class="hover:text-white transition">Design Services</a></li>
+                        <li><a href="#" class="hover:text-white transition">Rush Orders</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Contact Info</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-primary"></i>
+                            <span>123 Print Street, Inkville, CA 90210</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-primary"></i>
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-primary"></i>
+                            <span>info@printwave.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-2 text-primary"></i>
+                            <span>Mon-Fri: 8am-6pm</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p>&copy; 2023 PrintWave. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Sidebar Toggle
+        const settingsBtn = document.getElementById('settings-btn');
+        const closeSidebar = document.getElementById('close-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+
+        settingsBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+        });
+
+        closeSidebar.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+
+        // Theme Switching
+        const themeButtons = document.querySelectorAll('.theme-btn');
+
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.getAttribute('data-theme');
+                document.body.className = `theme-${theme} font-sans transition-colors duration-300`;
+
+                // Check if dark mode is active and reapply
+                const darkModeToggle = document.getElementById('dark-mode-toggle');
+                if (darkModeToggle.checked) {
+                    document.body.classList.add('dark-mode');
+                }
+            });
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+
+        // FAQ Toggle
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                const icon = toggle.querySelector('i');
+
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Form Submission
+        const contactForm = document.getElementById('contact-form');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            contactForm.reset();
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate process steps
+        gsap.utils.toArray('.process-step').forEach((element, index) => {
+            gsap.from(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                delay: index * 0.1
+            });
+        });
+
+        // Floating animation for hero image
+        gsap.to(".floating", {
+            y: -15,
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+
+        // Animate elements on load
+        document.querySelectorAll('.process-step').forEach(el => {
+            el.classList.add('animate-in');
+        });
+    </script>
+</body>
+
+</html>

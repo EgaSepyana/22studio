@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aesthetic FAQ Section</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-content {
+            max-height: 300px;
+        }
+
+        .faq-item.active .faq-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        .faq-toggle svg {
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .faq-item {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .faq-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .faq-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .faq-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .faq-item:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .faq-item:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-50 to-purple-50 min-h-screen flex items-center justify-center p-4 md:p-8">
+    <div class="w-full max-w-3xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Frequently Asked Questions</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Find answers to common questions about our products and
+                services.</p>
+        </div>
+
+        <div class="space-y-4">
+            <!-- FAQ Item 1 -->
+            <div class="faq-item bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <button
+                    class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                    <span class="text-lg md:text-xl font-medium text-gray-800">How do I create an account?</span>
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="faq-content px-5 md:px-6">
+                    <div class="pb-5 md:pb-6 text-gray-600">
+                        <p>Creating an account is simple! Click on the "Sign Up" button at the top right corner of our
+                            website, fill in your details including your email address and a secure password, and you'll
+                            be ready to go. We'll send you a confirmation email to verify your account.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 2 -->
+            <div class="faq-item bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <button
+                    class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                    <span class="text-lg md:text-xl font-medium text-gray-800">What payment methods do you
+                        accept?</span>
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="faq-content px-5 md:px-6">
+                    <div class="pb-5 md:pb-6 text-gray-600">
+                        <p>We accept all major credit and debit cards including Visa, MasterCard, and American Express.
+                            We also support payments through PayPal, Apple Pay, and Google Pay for your convenience. All
+                            transactions are securely processed with encryption.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="faq-item bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <button
+                    class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                    <span class="text-lg md:text-xl font-medium text-gray-800">How can I reset my password?</span>
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="faq-content px-5 md:px-6">
+                    <div class="pb-5 md:pb-6 text-gray-600">
+                        <p>If you've forgotten your password, go to the login page and click on "Forgot Password". Enter
+                            the email address associated with your account, and we'll send you a link to reset your
+                            password. The link will expire in 24 hours for security reasons.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="faq-item bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <button
+                    class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                    <span class="text-lg md:text-xl font-medium text-gray-800">What is your refund policy?</span>
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="faq-content px-5 md:px-6">
+                    <div class="pb-5 md:pb-6 text-gray-600">
+                        <p>We offer a 30-day money-back guarantee on all our products. If you're not satisfied with your
+                            purchase for any reason, simply contact our support team within 30 days of your purchase
+                            date, and we'll process your refund. Digital products may have different terms which will be
+                            specified at purchase.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Item 5 -->
+            <div class="faq-item bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <button
+                    class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                    <span class="text-lg md:text-xl font-medium text-gray-800">How do I contact customer support?</span>
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div class="faq-content px-5 md:px-6">
+                    <div class="pb-5 md:pb-6 text-gray-600">
+                        <p>Our customer support team is available 24/7 to assist you. You can reach us by email at
+                            support@example.com, through the live chat feature on our website, or by calling our
+                            toll-free number at 1-800-123-4567. Average response time is under 2 hours during business
+                            hours.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 text-center">
+            <p class="text-gray-600 mb-6">Still have questions? We're here to help!</p>
+            <button
+                class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                Contact Support
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqItems = document.querySelectorAll('.faq-item');
+            const faqToggles = document.querySelectorAll('.faq-toggle');
+
+            // Initialize FAQ items with staggered animation
+            setTimeout(() => {
+                faqItems.forEach(item => {
+                    item.style.opacity = '1';
+                });
+            }, 100);
+
+            // Toggle FAQ items
+            faqToggles.forEach(toggle => {
+                toggle.addEventListener('click', function () {
+                    const parent = this.closest('.faq-item');
+
+                    // Close all other items
+                    if (!parent.classList.contains('active')) {
+                        faqItems.forEach(item => {
+                            item.classList.remove('active');
+                        });
+                    }
+
+                    // Toggle current item
+                    parent.classList.toggle('active');
+                });
+            });
+
+            // Optional: Open first FAQ item by default
+            // faqItems[0].classList.add('active');
+        });
+    </script>
+</body>
+
+</html>

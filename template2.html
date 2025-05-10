@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Business Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#3B82F6',
+                            dark: '#2563EB'
+                        },
+                        secondary: {
+                            DEFAULT: '#10B981',
+                            dark: '#059669'
+                        },
+                        accent: {
+                            DEFAULT: '#F59E0B',
+                            dark: '#D97706'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'slide-down': 'slideDown 0.5s ease-out',
+                        'slide-left': 'slideLeft 0.5s ease-out',
+                        'slide-right': 'slideRight 0.5s ease-out'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        slideLeft: {
+                            '0%': { transform: 'translateX(20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        },
+                        slideRight: {
+                            '0%': { transform: 'translateX(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 80px 0;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: currentColor;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .theme-selector {
+            transition: all 0.3s ease;
+        }
+
+        .theme-selector:hover {
+            transform: scale(1.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .client-logo:hover {
+            filter: brightness(0) invert(1);
+        }
+
+        .floating-btn {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-panel {
+            transition: all 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .settings-panel.open {
+            transform: translateY(0);
+        }
+
+        /* Animation classes */
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .animate-slide-down {
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .animate-slide-left {
+            animation: slideLeft 0.8s ease-out;
+        }
+
+        .animate-slide-right {
+            animation: slideRight 0.8s ease-out;
+        }
+
+        /* Delay classes */
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-500 {
+            animation-delay: 0.5s;
+        }
+
+        /* Dark mode styles */
+        .dark .dark\:bg-dark {
+            background-color: #1a202c;
+        }
+
+        .dark .dark\:text-light {
+            color: #f7fafc;
+        }
+
+        .dark .dark\:border-gray-700 {
+            border-color: #4a5568;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 transition-colors duration-300">
+    <!-- Floating Settings Button -->
+    <div class="fixed bottom-6 left-6 z-50">
+        <button id="settings-btn"
+            class="floating-btn w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center text-xl shadow-lg transition-all duration-300 hover:bg-primary-dark">
+            <i class="fas fa-cog"></i>
+        </button>
+
+        <div id="settings-panel"
+            class="settings-panel absolute bottom-16 left-0 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 border border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold mb-3 dark:text-white">Theme Settings</h3>
+
+            <div class="mb-4">
+                <h4 class="text-sm font-medium mb-2 dark:text-gray-300">Color Theme</h4>
+                <div class="flex space-x-2">
+                    <button data-theme="primary" class="theme-selector w-8 h-8 rounded-full bg-blue-500"></button>
+                    <button data-theme="secondary" class="theme-selector w-8 h-8 rounded-full bg-green-500"></button>
+                    <button data-theme="accent" class="theme-selector w-8 h-8 rounded-full bg-yellow-500"></button>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-medium mb-2 dark:text-gray-300">Dark Mode</h4>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="dark-mode-toggle" class="sr-only peer">
+                    <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                    </div>
+                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white dark:bg-gray-800 shadow-md z-40 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-primary dark:text-white">BizLand</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-800 dark:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about"
+                        class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">About</a>
+                    <a href="#services"
+                        class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Services</a>
+                    <a href="#projects"
+                        class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Projects</a>
+                    <a href="#clients"
+                        class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Clients</a>
+                    <a href="#how-to-start"
+                        class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">How
+                        to Start</a>
+                    <a href="#contact"
+                        class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-white dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex flex-col space-y-4">
+                <a href="#about"
+                    class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">About</a>
+                <a href="#services"
+                    class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Services</a>
+                <a href="#projects"
+                    class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Projects</a>
+                <a href="#clients"
+                    class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Clients</a>
+                <a href="#how-to-start"
+                    class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">How to
+                    Start</a>
+                <a href="#contact"
+                    class="nav-link text-gray-800 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero"
+        class="section flex items-center justify-center bg-gradient-to-r from-primary to-primary-dark text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 animate-slide-down">Transform Your Business</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto animate-slide-down delay-100">Innovative solutions
+                tailored to your needs. Let's build something amazing together.</p>
+            <div class="flex justify-center space-x-4 animate-slide-down delay-200">
+                <a href="#contact"
+                    class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300">Get
+                    Started</a>
+                <a href="#services"
+                    class="border-2 border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition duration-300">Our
+                    Services</a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#about" class="text-white text-2xl">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6 py-16">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 animate-slide-left">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-6">About Our Company</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        Founded in 2010, we've been helping businesses grow and thrive in the digital age. Our team of
+                        experts brings together diverse skills and experiences to deliver exceptional results.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        We believe in building long-term relationships with our clients, understanding their unique
+                        challenges, and providing customized solutions that drive real impact.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-primary bg-opacity-10 text-primary flex items-center justify-center mr-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300">10+ Years Experience</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 rounded-full bg-primary bg-opacity-10 text-primary flex items-center justify-center mr-3">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <span class="text-gray-700 dark:text-gray-300">100+ Happy Clients</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 md:pl-12 animate-slide-right">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1552581234-26160f608093?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                            alt="Team working" class="rounded-lg shadow-xl w-full">
+                        <div class="absolute -bottom-6 -right-6 bg-primary text-white p-6 rounded-lg shadow-lg w-2/3">
+                            <h3 class="font-bold text-xl mb-2">Our Mission</h3>
+                            <p class="text-sm">To empower businesses through innovative technology solutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6 py-16">
+            <div class="text-center mb-16 animate-slide-down">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">Our Services</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">We offer a comprehensive range of services
+                    to help your business succeed in today's competitive landscape.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div
+                    class="service-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl animate-slide-up delay-100">
+                    <div
+                        class="w-14 h-14 bg-primary bg-opacity-10 text-primary rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-globe text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Web Development</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Custom websites and web applications built with the
+                        latest technologies to ensure performance and scalability.</p>
+                    <a href="#" class="text-primary font-medium inline-flex items-center">Learn more <i
+                            class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+
+                <!-- Service 2 -->
+                <div
+                    class="service-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl animate-slide-up delay-200">
+                    <div
+                        class="w-14 h-14 bg-primary bg-opacity-10 text-primary rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Mobile Apps</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Cross-platform mobile applications that deliver
+                        seamless user experiences on iOS and Android.</p>
+                    <a href="#" class="text-primary font-medium inline-flex items-center">Learn more <i
+                            class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+
+                <!-- Service 3 -->
+                <div
+                    class="service-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl animate-slide-up delay-300">
+                    <div
+                        class="w-14 h-14 bg-primary bg-opacity-10 text-primary rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Digital Marketing</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Comprehensive digital marketing strategies to
+                        increase your online visibility and customer engagement.</p>
+                    <a href="#" class="text-primary font-medium inline-flex items-center">Learn more <i
+                            class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+
+                <!-- Service 4 -->
+                <div
+                    class="service-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl animate-slide-up delay-400">
+                    <div
+                        class="w-14 h-14 bg-primary bg-opacity-10 text-primary rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-paint-brush text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">UI/UX Design</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Beautiful, intuitive interfaces designed to enhance
+                        user satisfaction and drive conversions.</p>
+                    <a href="#" class="text-primary font-medium inline-flex items-center">Learn more <i
+                            class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+
+                <!-- Service 5 -->
+                <div
+                    class="service-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl animate-slide-up delay-500">
+                    <div
+                        class="w-14 h-14 bg-primary bg-opacity-10 text-primary rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-cloud text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Cloud Solutions</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Secure, scalable cloud infrastructure and services
+                        to support your business growth.</p>
+                    <a href="#" class="text-primary font-medium inline-flex items-center">Learn more <i
+                            class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+
+                <!-- Service 6 -->
+                <div
+                    class="service-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl animate-slide-up delay-600">
+                    <div
+                        class="w-14 h-14 bg-primary bg-opacity-10 text-primary rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-headset text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">24/7 Support</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Round-the-clock technical support to ensure your
+                        systems are always running smoothly.</p>
+                    <a href="#" class="text-primary font-medium inline-flex items-center">Learn more <i
+                            class="fas fa-arrow-right ml-2"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6 py-16">
+            <div class="text-center mb-16 animate-slide-down">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">Our Projects</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Explore some of our recent work and see
+                    how we've helped businesses like yours achieve their goals.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card rounded-lg overflow-hidden shadow-md relative animate-slide-up delay-100">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="E-commerce Website" class="w-full h-64 object-cover">
+                    <div
+                        class="project-overlay absolute inset-0 bg-primary bg-opacity-90 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">E-commerce Platform</h3>
+                        <p class="text-white text-sm mb-4 text-center">A fully customized online store with integrated
+                            payment processing and inventory management.</p>
+                        <a href="#"
+                            class="text-white border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition duration-300">View
+                            Case Study</a>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card rounded-lg overflow-hidden shadow-md relative animate-slide-up delay-200">
+                    <img src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="Mobile App" class="w-full h-64 object-cover">
+                    <div
+                        class="project-overlay absolute inset-0 bg-primary bg-opacity-90 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">Fitness Mobile App</h3>
+                        <p class="text-white text-sm mb-4 text-center">A cross-platform fitness application with workout
+                            tracking, nutrition planning, and social features.</p>
+                        <a href="#"
+                            class="text-white border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition duration-300">View
+                            Case Study</a>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card rounded-lg overflow-hidden shadow-md relative animate-slide-up delay-300">
+                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="Corporate Website" class="w-full h-64 object-cover">
+                    <div
+                        class="project-overlay absolute inset-0 bg-primary bg-opacity-90 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">Corporate Website</h3>
+                        <p class="text-white text-sm mb-4 text-center">A modern, responsive website with CMS integration
+                            for easy content management.</p>
+                        <a href="#"
+                            class="text-white border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition duration-300">View
+                            Case Study</a>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card rounded-lg overflow-hidden shadow-md relative animate-slide-up delay-400">
+                    <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="SaaS Platform" class="w-full h-64 object-cover">
+                    <div
+                        class="project-overlay absolute inset-0 bg-primary bg-opacity-90 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">SaaS Platform</h3>
+                        <p class="text-white text-sm mb-4 text-center">A cloud-based software solution for project
+                            management and team collaboration.</p>
+                        <a href="#"
+                            class="text-white border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition duration-300">View
+                            Case Study</a>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-card rounded-lg overflow-hidden shadow-md relative animate-slide-up delay-500">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="Healthcare App" class="w-full h-64 object-cover">
+                    <div
+                        class="project-overlay absolute inset-0 bg-primary bg-opacity-90 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">Healthcare Portal</h3>
+                        <p class="text-white text-sm mb-4 text-center">A secure patient portal with appointment
+                            scheduling and telemedicine capabilities.</p>
+                        <a href="#"
+                            class="text-white border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition duration-300">View
+                            Case Study</a>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="project-card rounded-lg overflow-hidden shadow-md relative animate-slide-up delay-600">
+                    <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="Education Platform" class="w-full h-64 object-cover">
+                    <div
+                        class="project-overlay absolute inset-0 bg-primary bg-opacity-90 flex flex-col items-center justify-center opacity-0 transition-opacity duration-300 p-6">
+                        <h3 class="text-white text-xl font-bold mb-2">E-learning Platform</h3>
+                        <p class="text-white text-sm mb-4 text-center">An interactive online learning system with course
+                            management and progress tracking.</p>
+                        <a href="#"
+                            class="text-white border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white hover:text-primary transition duration-300">View
+                            Case Study</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 animate-slide-up delay-700">
+                <a href="#"
+                    class="inline-block bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-dark transition duration-300">View
+                    All Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section id="clients" class="section bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6 py-16">
+            <div class="text-center mb-16 animate-slide-down">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">Our Clients</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">We've had the privilege of working with
+                    some amazing companies across various industries.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
+                <div
+                    class="client-logo flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 animate-slide-up delay-100">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png"
+                        alt="React" class="h-12 object-contain">
+                </div>
+                <div
+                    class="client-logo flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 animate-slide-up delay-200">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Laravel.svg/1200px-Laravel.svg.png"
+                        alt="Laravel" class="h-12 object-contain">
+                </div>
+                <div
+                    class="client-logo flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 animate-slide-up delay-300">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/1024px-Tailwind_CSS_Logo.svg.png"
+                        alt="Tailwind CSS" class="h-12 object-contain">
+                </div>
+                <div
+                    class="client-logo flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 animate-slide-up delay-400">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png"
+                        alt="AWS" class="h-12 object-contain">
+                </div>
+                <div
+                    class="client-logo flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 animate-slide-up delay-500">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Microsoft_Office_logo_%282019%E2%80%93present%29.svg/1024px-Microsoft_Office_logo_%282019%E2%80%93present%29.svg.png"
+                        alt="Microsoft" class="h-12 object-contain">
+                </div>
+                <div
+                    class="client-logo flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 animate-slide-up delay-600">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png"
+                        alt="Google" class="h-12 object-contain">
+                </div>
+            </div>
+
+            <div class="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 animate-slide-up delay-700">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/4 mb-6 md:mb-0 flex justify-center">
+                        <div
+                            class="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                            <i class="fas fa-quote-left text-3xl text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="md:w-3/4 md:pl-8">
+                        <p class="text-gray-600 dark:text-gray-300 italic mb-4">
+                            "Working with BizLand was a game-changer for our business. Their team delivered exceptional
+                            results on time and within budget. The website they built for us has significantly improved
+                            our online presence and customer engagement."
+                        </p>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 dark:text-white">Sarah Johnson</h4>
+                            <p class="text-gray-500 dark:text-gray-400">CEO, TechSolutions Inc.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Start Section -->
+    <section id="how-to-start" class="section bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-6 py-16">
+            <div class="text-center mb-16 animate-slide-down">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">How to Get Started</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Our simple 4-step process ensures a smooth
+                    and successful project from start to finish.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 text-center animate-slide-up delay-100">
+                    <div
+                        class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        1</div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Discovery Call</h3>
+                    <p class="text-gray-600 dark:text-gray-300">We'll discuss your project goals, requirements, and
+                        timeline in a free consultation.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 text-center animate-slide-up delay-200">
+                    <div
+                        class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        2</div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Proposal</h3>
+                    <p class="text-gray-600 dark:text-gray-300">We'll prepare a detailed proposal with scope, timeline,
+                        and pricing for your review.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 text-center animate-slide-up delay-300">
+                    <div
+                        class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        3</div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Development</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Our team gets to work, keeping you updated with regular
+                        progress reports.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 text-center animate-slide-up delay-400">
+                    <div
+                        class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                        4</div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Launch & Support</h3>
+                    <p class="text-gray-600 dark:text-gray-300">We deploy your project and provide ongoing support to
+                        ensure continued success.</p>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-primary rounded-xl shadow-md p-8 text-white animate-slide-up delay-500">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-2/3 mb-6 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-3">Ready to Start Your Project?</h3>
+                        <p class="mb-6">Get in touch with our team today to discuss how we can help bring your vision to
+                            life.</p>
+                        <a href="#contact"
+                            class="bg-white text-primary px-6 py-2 rounded-full font-medium inline-block">Contact Us</a>
+                    </div>
+                    <div class="md:w-1/3 flex justify-center">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3059/3059518.png" alt="Start project"
+                            class="h-32 opacity-90">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-6 py-16">
+            <div class="text-center mb-16 animate-slide-down">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">Get In Touch</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Have a project in mind or questions about
+                    our services? We'd love to hear from you.</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2 animate-slide-left">
+                    <form class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
+                        <div class="mb-6">
+                            <label for="name" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Full
+                                Name</label>
+                            <input type="text" id="name"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                placeholder="John Doe">
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="email" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Email
+                                Address</label>
+                            <input type="email" id="email"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                placeholder="john@example.com">
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="phone" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Phone
+                                Number (Optional)</label>
+                            <input type="tel" id="phone"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                placeholder="+1 (555) 123-4567">
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="service" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Service
+                                Interested In</label>
+                            <select id="service"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
+                                <option value="">Select a service</option>
+                                <option value="web">Web Development</option>
+                                <option value="mobile">Mobile Apps</option>
+                                <option value="marketing">Digital Marketing</option>
+                                <option value="design">UI/UX Design</option>
+                                <option value="cloud">Cloud Solutions</option>
+                                <option value="support">24/7 Support</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="message" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Your
+                                Message</label>
+                            <textarea id="message" rows="5"
+                                class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                placeholder="Tell us about your project..."></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition duration-300">Send
+                            Message</button>
+                    </form>
+                </div>
+
+                <div class="lg:w-1/2 animate-slide-right">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 h-full">
+                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Contact Information</h3>
+
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-primary bg-opacity-10 text-primary flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-1">Our Location</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">123 Business Ave, Suite 456<br>San
+                                        Francisco, CA 94107</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-primary bg-opacity-10 text-primary flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-1">Email Us</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">info@bizland.com<br>support@bizland.com
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-primary bg-opacity-10 text-primary flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-phone-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 dark:text-white mb-1">Call Us</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">+1 (555) 123-4567<br>Mon-Fri, 9am-5pm
+                                        PST</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-4">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#"
+                                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white flex items-center justify-center hover:bg-primary hover:text-white transition duration-300">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white flex items-center justify-center hover:bg-primary hover:text-white transition duration-300">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white flex items-center justify-center hover:bg-primary hover:text-white transition duration-300">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#"
+                                    class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white flex items-center justify-center hover:bg-primary hover:text-white transition duration-300">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-4">Find Us on Map</h4>
+                            <div class="rounded-xl overflow-hidden h-64">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.158217056123!2d-122.4194159240506!3d37.77492997189696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan%20Francisco%2C%20CA%2C%20USA!5e0!3m2!1sen!2s!4v1689874567890!5m2!1sen!2s"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="animate-slide-up delay-100">
+                    <h3 class="text-xl font-bold mb-4">BizLand</h3>
+                    <p class="text-gray-400 mb-4">Innovative solutions for your business needs. Let's build something
+                        amazing together.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300"><i
+                                class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <div class="animate-slide-up delay-200">
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a>
+                        </li>
+                        <li><a href="#services"
+                                class="text-gray-400 hover:text-white transition duration-300">Services</a></li>
+                        <li><a href="#projects"
+                                class="text-gray-400 hover:text-white transition duration-300">Projects</a></li>
+                        <li><a href="#clients"
+                                class="text-gray-400 hover:text-white transition duration-300">Clients</a></li>
+                        <li><a href="#contact"
+                                class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="animate-slide-up delay-300">
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Web
+                                Development</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Mobile Apps</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Digital
+                                Marketing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">UI/UX Design</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Cloud
+                                Solutions</a></li>
+                    </ul>
+                </div>
+
+                <div class="animate-slide-up delay-400">
+                    <h4 class="text-lg font-semibold mb-4">Newsletter</h4>
+                    <p class="text-gray-400 mb-4">Subscribe to our newsletter for the latest updates and insights.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email"
+                            class="px-4 py-2 rounded-l-lg focus:outline-none text-gray-800 w-full">
+                        <button type="submit"
+                            class="bg-primary px-4 py-2 rounded-r-lg hover:bg-primary-dark transition duration-300">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center animate-slide-up delay-500">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 BizLand. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Settings panel toggle
+        const settingsButton = document.getElementById('settings-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+
+        settingsButton.addEventListener('click', () => {
+            settingsPanel.classList.toggle('open');
+        });
+
+        // Close settings panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!settingsButton.contains(e.target) && !settingsPanel.contains(e.target)) {
+                settingsPanel.classList.remove('open');
+            }
+        });
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        darkModeToggle.addEventListener('change', () => {
+            document.documentElement.classList.toggle('dark');
+
+            // Save preference to localStorage
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.documentElement.classList.add('dark');
+            darkModeToggle.checked = true;
+        }
+
+        // Theme color switcher
+        const themeButtons = document.querySelectorAll('[data-theme]');
+
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.getAttribute('data-theme');
+
+                // Update primary color in Tailwind config
+                tailwind.config.theme.extend.colors.primary.DEFAULT = getComputedStyle(document.documentElement).getPropertyValue(`--color-${theme}`);
+                tailwind.config.theme.extend.colors.primary.dark = getComputedStyle(document.documentElement).getPropertyValue(`--color-${theme}-dark`);
+
+                // Save theme preference
+                localStorage.setItem('colorTheme', theme);
+
+                // Update UI to reflect new theme
+                updateThemeColors(theme);
+            });
+        });
+
+        // Check for saved color theme preference
+        const savedTheme = localStorage.getItem('colorTheme');
+        if (savedTheme) {
+            updateThemeColors(savedTheme);
+        }
+
+        function updateThemeColors(theme) {
+            // Update all elements with primary color
+            const primaryElements = document.querySelectorAll('.bg-primary, .text-primary, .border-primary, .bg-primary-dark');
+
+            primaryElements.forEach(el => {
+                if (el.classList.contains('bg-primary')) {
+                    el.classList.remove('bg-primary');
+                    el.classList.add(`bg-${theme}`);
+                }
+                if (el.classList.contains('text-primary')) {
+                    el.classList.remove('text-primary');
+                    el.classList.add(`text-${theme}`);
+                }
+                if (el.classList.contains('border-primary')) {
+                    el.classList.remove('border-primary');
+                    el.classList.add(`border-${theme}`);
+                }
+                if (el.classList.contains('bg-primary-dark')) {
+                    el.classList.remove('bg-primary-dark');
+                    el.classList.add(`bg-${theme}-dark`);
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Scroll animations
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.animate-slide-up, .animate-slide-down, .animate-slide-left, .animate-slide-right, .animate-fade-in');
+
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementPosition < windowHeight - 100) {
+                    element.style.opacity = '1';
+                }
+            });
+        };
+
+        // Initialize animations on load
+        window.addEventListener('load', animateOnScroll);
+
+        // Animate on scroll
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+
+</html>

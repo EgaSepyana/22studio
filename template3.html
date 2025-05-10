@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InkThread - Custom T-Shirt Printing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --bg: #ffffff;
+            --section-bg: #f9fafb;
+        }
+
+        .dark-theme {
+            --primary: #818cf8;
+            --secondary: #6ee7b7;
+            --accent: #fbbf24;
+            --text: #e5e7eb;
+            --bg: #1a1a2e;
+            --section-bg: #16213e;
+        }
+
+        .colorful-theme {
+            --primary: #e11d48;
+            --secondary: #2563eb;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --bg: #ffffff;
+            --section-bg: #f9fafb;
+        }
+
+        body {
+            color: var(--text);
+            background-color: var(--bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .section-bg {
+            background-color: var(--section-bg);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .border-primary {
+            border-color: var(--primary);
+        }
+
+        .text-secondary {
+            color: var(--secondary);
+        }
+
+        .bg-secondary {
+            background-color: var(--secondary);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .settings-panel {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .settings-panel.open {
+            transform: translateX(0);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .t-shirt-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .t-shirt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .client-logo {
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: filter 0.3s, opacity 0.3s;
+        }
+
+        .client-logo:hover {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        input,
+        textarea {
+            background-color: var(--section-bg);
+            border: 1px solid var(--text);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .hidden-section {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .animate-section {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .map-container {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+        }
+
+        .map-container iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                flex-direction: column;
+            }
+
+            .step-item {
+                flex-direction: row;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans">
+    <!-- Floating Settings Button -->
+    <button id="settings-toggle"
+        class="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:bg-secondary transition-all">
+        <i class="fas fa-cog text-xl"></i>
+    </button>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel"
+        class="settings-panel fixed top-0 right-0 w-64 h-full bg-white dark:bg-gray-800 shadow-lg z-40 p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold">Theme Settings</h3>
+            <button id="close-settings" class="text-gray-500 hover:text-primary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="mb-6">
+            <h4 class="font-medium mb-3">Color Theme</h4>
+            <div class="flex space-x-3">
+                <button data-theme="light"
+                    class="theme-btn w-10 h-10 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button data-theme="dark"
+                    class="theme-btn w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button data-theme="colorful"
+                    class="theme-btn w-10 h-10 rounded-full bg-gradient-to-r from-red-500 via-blue-500 to-yellow-500 flex items-center justify-center">
+                    <i class="fas fa-palette text-white"></i>
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="font-medium mb-3">Animation Speed</h4>
+            <div class="flex items-center">
+                <input type="range" id="animation-speed" min="0.5" max="2" step="0.1" value="1" class="w-full">
+                <span id="speed-value" class="ml-2 text-sm">1x</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-md z-30 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-primary">Ink<span
+                            class="text-secondary">Thread</span></a>
+                </div>
+
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary">About</a>
+                    <a href="#services"
+                        class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary">Services</a>
+                    <a href="#projects"
+                        class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary">Projects</a>
+                    <a href="#clients" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary">Clients</a>
+                    <a href="#how-to-start" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary">How to
+                        Start</a>
+                    <a href="#contact" class="nav-link text-gray-700 dark:text-gray-300 hover:text-primary">Contact</a>
+                </div>
+
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 dark:text-gray-300 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <div id="mobile-menu" class="md:hidden hidden mt-4">
+                <a href="#about" class="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary">About</a>
+                <a href="#services" class="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary">Services</a>
+                <a href="#projects" class="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary">Projects</a>
+                <a href="#clients" class="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary">Clients</a>
+                <a href="#how-to-start" class="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary">How to
+                    Start</a>
+                <a href="#contact" class="block py-2 text-gray-700 dark:text-gray-300 hover:text-primary">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-24 pb-16 md:pt-32 md:pb-24 section-bg">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 hidden-section">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">Custom T-Shirts That <span
+                            class="text-primary">Tell Your Story</span></h1>
+                    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">From concept to creation, we
+                        bring your ideas to life with premium quality custom t-shirts.</p>
+                    <div class="flex space-x-4">
+                        <a href="#how-to-start" class="btn-primary px-8 py-3 rounded-full font-medium">Get Started</a>
+                        <a href="#projects"
+                            class="px-8 py-3 rounded-full font-medium border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all">View
+                            Portfolio</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 hidden-section">
+                    <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="Custom T-Shirts" class="rounded-xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">About <span class="text-primary">InkThread</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">We're passionate about
+                    creating high-quality custom apparel that helps individuals and businesses express their unique
+                    identity.</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center hidden-section">
+                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80"
+                        alt="Our Workshop" class="rounded-xl shadow-lg">
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-6">Our <span class="text-secondary">Story</span></h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">Founded in 2015, InkThread started as a small
+                        garage operation with a single screen printing press. Today, we've grown into a full-service
+                        custom apparel provider with state-of-the-art equipment and a team of passionate designers and
+                        printers.</p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">What sets us apart is our commitment to quality and
+                        customer satisfaction. Every shirt we print undergoes rigorous quality checks to ensure it meets
+                        our high standards.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Premium Quality Materials</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Eco-Friendly Inks</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Fast Turnaround</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Custom Design Services</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Services</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">We offer a
+                    comprehensive range of printing techniques to bring your vision to life on fabric.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-tshirt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Screen Printing</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Traditional screen printing for vibrant,
+                        long-lasting designs. Perfect for bulk orders with simple to complex designs.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Best for orders of 25+</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Vibrant colors</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Durable prints</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.1s">
+                    <div
+                        class="w-16 h-16 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-spray-can text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">DTG Printing</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Direct-to-garment printing for photorealistic
+                        designs. Ideal for small orders or designs with many colors.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Great for 1-24 pieces</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>No color limitations</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Soft hand feel</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.2s">
+                    <div class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-cut text-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Embroidery</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Premium embroidery services for a professional,
+                        upscale look. Perfect for logos and text on polos and hats.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Professional appearance</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Long-lasting</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Great for workwear</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.3s">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-palette text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Custom Design</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Our talented designers will work with you to create
+                        the perfect artwork for your custom apparel.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Professional designers</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Unlimited revisions</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Fast turnaround</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.4s">
+                    <div
+                        class="w-16 h-16 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-tshirt text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Sublimation</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Full-color, all-over printing for performance wear
+                        and light-colored garments.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Vibrant all-over prints</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>No cracking or peeling</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Great for sports teams</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.5s">
+                    <div class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-box-open text-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Private Label</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Create your own clothing line with custom labels,
+                        tags, and packaging.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Custom branding</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>White label service</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Bulk discounts</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Projects</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">See some of our recent
+                    work and get inspired for your next custom apparel project.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80"
+                        alt="Band T-Shirts"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Music Band Merch</h3>
+                        <p class="opacity-90">Screen printed tour t-shirts for indie rock band</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.1s">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="Company Uniforms"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Corporate Uniforms</h3>
+                        <p class="opacity-90">Custom embroidered polos for tech company</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.2s">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80"
+                        alt="Sports Team Jerseys"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Sports Team Jerseys</h3>
+                        <p class="opacity-90">Sublimated basketball jerseys for local league</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.3s">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="Event T-Shirts"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Charity Event Tees</h3>
+                        <p class="opacity-90">DTG printed shirts for 5K run fundraiser</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.4s">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80"
+                        alt="Fashion Line"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Streetwear Collection</h3>
+                        <p class="opacity-90">Limited edition graphic tees for local brand</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.5s">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="School Spirit"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">School Spirit Wear</h3>
+                        <p class="opacity-90">Screen printed hoodies for high school</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 hidden-section">
+                <a href="#contact" class="btn-primary px-8 py-3 rounded-full font-medium inline-block">Start Your
+                    Project</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section id="clients" class="py-16 md:py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Clients</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">We've had the privilege
+                    of working with amazing brands and organizations across various industries.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
+                <div class="flex justify-center hidden-section">
+                    <img src="https://via.placeholder.com/150x80?text=Client+1" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center hidden-section" style="transition-delay: 0.1s">
+                    <img src="https://via.placeholder.com/150x80?text=Client+2" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center hidden-section" style="transition-delay: 0.2s">
+                    <img src="https://via.placeholder.com/150x80?text=Client+3" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center hidden-section" style="transition-delay: 0.3s">
+                    <img src="https://via.placeholder.com/150x80?text=Client+4" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center hidden-section" style="transition-delay: 0.4s">
+                    <img src="https://via.placeholder.com/150x80?text=Client+5" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center hidden-section" style="transition-delay: 0.5s">
+                    <img src="https://via.placeholder.com/150x80?text=Client+6" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+            </div>
+
+            <div class="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12 hidden-section">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/3 mb-8 md:mb-0 flex justify-center">
+                        <div class="w-32 h-32 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                            <i class="fas fa-quote-left text-primary text-4xl"></i>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 md:pl-10">
+                        <blockquote class="text-lg md:text-xl italic text-gray-600 dark:text-gray-300 mb-6">"InkThread
+                            delivered exceptional quality t-shirts for our company retreat. The colors were vibrant, the
+                            fit was perfect, and the entire process was seamless. We'll definitely be using them for all
+                            our future apparel needs."</blockquote>
+                        <div class="font-bold text-lg">Sarah Johnson</div>
+                        <div class="text-gray-500">Marketing Director, TechCorp</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Start Section -->
+    <section id="how-to-start" class="py-16 md:py-24">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">How to <span class="text-primary">Get Started</span>
+                </h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Our simple 5-step
+                    process makes getting custom t-shirts easy and stress-free.</p>
+            </div>
+
+            <div class="steps-container flex flex-col space-y-8 max-w-4xl mx-auto">
+                <div class="step-item flex items-start hidden-section">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Consultation</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Contact us to discuss your project. We'll ask about
+                            quantity, design, colors, fabric preferences, and timeline.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section" style="transition-delay: 0.1s">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Design</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Submit your artwork or work with our designers.
+                            We'll provide mockups and recommendations for the best printing method.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section" style="transition-delay: 0.2s">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Approval</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Review and approve the final design mockup. We'll
+                            provide a detailed quote and production timeline.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section" style="transition-delay: 0.3s">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Production</h3>
+                        <p class="text-gray-600 dark:text-gray-300">We print your shirts with care and precision.
+                            Quality checks are performed at every stage.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section" style="transition-delay: 0.4s">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Delivery</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Your custom shirts are packaged with care and
+                            shipped to your doorstep or ready for pickup.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-primary bg-opacity-10 rounded-xl p-8 md:p-12 text-center hidden-section">
+                <h3 class="text-2xl md:text-3xl font-bold mb-6">Ready to Create Your Custom T-Shirts?</h3>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">Whether you need
+                    10 shirts or 10,000, we're here to help bring your vision to life with premium quality custom
+                    apparel.</p>
+                <a href="#contact" class="btn-primary px-8 py-3 rounded-full font-medium inline-block">Get a Free
+                    Quote</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 section-bg">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact <span class="text-primary">Us</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Have questions or ready
+                    to start your project? Reach out to our team—we're happy to help!</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="lg:w-1/2 hidden-section">
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block mb-2 font-medium">Your Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-3 rounded-lg" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-2 font-medium">Email Address</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 rounded-lg" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="subject" class="block mb-2 font-medium">Subject</label>
+                            <input type="text" id="subject" class="w-full px-4 py-3 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block mb-2 font-medium">Your Message</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 rounded-lg" required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="btn-primary px-8 py-3 rounded-full font-medium w-full md:w-auto">Send
+                            Message</button>
+                    </form>
+
+                    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-start">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                                <i class="fas fa-map-marker-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Location</h4>
+                                <p class="text-gray-600 dark:text-gray-300">123 Print Street, Inkville, CA 90210</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                                <i class="fas fa-phone-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Phone</h4>
+                                <p class="text-gray-600 dark:text-gray-300">(555) 123-4567</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                                <i class="fas fa-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Email</h4>
+                                <p class="text-gray-600 dark:text-gray-300">hello@inkthread.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div
+                                class="w-12 h-12 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                                <i class="fas fa-clock text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold mb-1">Hours</h4>
+                                <p class="text-gray-600 dark:text-gray-300">Mon-Fri: 9AM - 6PM</p>
+                                <p class="text-gray-600 dark:text-gray-300">Sat: 10AM - 4PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 hidden-section">
+                    <div class="map-container rounded-xl overflow-hidden shadow-lg">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215373510928!2d-73.9878449241649!3d40.74844097138945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1689870501233!5m2!1sen!2sus"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <div class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold mb-4">Frequently Asked Questions</h3>
+                        <div class="space-y-4">
+                            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                                <h4 class="font-medium mb-2">What's your minimum order quantity?</h4>
+                                <p class="text-gray-600 dark:text-gray-300">We can print as few as 1 shirt with our DTG
+                                    technology. For screen printing, the minimum is typically 25 pieces.</p>
+                            </div>
+                            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                                <h4 class="font-medium mb-2">How long does production take?</h4>
+                                <p class="text-gray-600 dark:text-gray-300">Standard turnaround is 7-10 business days
+                                    after approval. Rush services are available for an additional fee.</p>
+                            </div>
+                            <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                                <h4 class="font-medium mb-2">Do you offer design services?</h4>
+                                <p class="text-gray-600 dark:text-gray-300">Yes! Our design team can create custom
+                                    artwork for your shirts starting at $50 per design.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-2">What file formats do you accept for artwork?</h4>
+                                <p class="text-gray-600 dark:text-gray-300">We prefer vector files (AI, EPS, PDF) but
+                                    can also work with high-resolution PNG, JPG, or PSD files.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <a href="#" class="text-2xl font-bold text-white mb-4 inline-block">Ink<span
+                            class="text-primary">Thread</span></a>
+                    <p class="text-gray-400 mb-4">Premium custom t-shirt printing for businesses, organizations, and
+                        individuals.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Services</a>
+                        </li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors">Portfolio</a>
+                        </li>
+                        <li><a href="#how-to-start" class="text-gray-400 hover:text-white transition-colors">How to
+                                Start</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Screen Printing</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">DTG Printing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Embroidery</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Sublimation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Design Services</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Subscribe to get updates on special offers and new products.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email"
+                            class="px-4 py-2 rounded-l-lg text-gray-900 w-full">
+                        <button type="submit" class="bg-primary px-4 py-2 rounded-r-lg text-white">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 InkThread. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Settings panel toggle
+        const settingsToggle = document.getElementById('settings-toggle');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettings = document.getElementById('close-settings');
+
+        settingsToggle.addEventListener('click', () => {
+            settingsPanel.classList.toggle('open');
+        });
+
+        closeSettings.addEventListener('click', () => {
+            settingsPanel.classList.remove('open');
+        });
+
+        // Theme switcher
+        const themeButtons = document.querySelectorAll('.theme-btn');
+
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const theme = button.getAttribute('data-theme');
+                document.documentElement.classList.remove('dark-theme', 'colorful-theme');
+
+                if (theme !== 'light') {
+                    document.documentElement.classList.add(`${theme}-theme`);
+                }
+
+                // Store preference in localStorage
+                localStorage.setItem('theme', theme);
+            });
+        });
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme && savedTheme !== 'light') {
+            document.documentElement.classList.add(`${savedTheme}-theme`);
+        }
+
+        // Animation speed control
+        const speedControl = document.getElementById('animation-speed');
+        const speedValue = document.getElementById('speed-value');
+
+        speedControl.addEventListener('input', () => {
+            const speed = speedControl.value;
+            speedValue.textContent = `${speed}x`;
+
+            // Store preference in localStorage
+            localStorage.setItem('animationSpeed', speed);
+        });
+
+        // Set initial speed if saved
+        const savedSpeed = localStorage.getItem('animationSpeed');
+        if (savedSpeed) {
+            speedControl.value = savedSpeed;
+            speedValue.textContent = `${savedSpeed}x`;
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Contact form submission
+        const contactForm = document.getElementById('contact-form');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            // Here you would typically send the data to a server
+            console.log({ name, email, subject, message });
+
+            // Show success message
+            alert('Thank you for your message! We will get back to you soon.');
+
+            // Reset form
+            contactForm.reset();
+        });
+
+        // Scroll animations with GSAP
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize GSAP animations
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Get animation speed from settings
+            const animationSpeed = parseFloat(localStorage.getItem('animationSpeed')) || 1;
+
+            // Animate all hidden sections
+            const hiddenSections = document.querySelectorAll('.hidden-section');
+
+            hiddenSections.forEach((section, index) => {
+                const delay = index * 0.1;
+
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8 * animationSpeed,
+                    delay: delay * animationSpeed,
+                    ease: "power3.out"
+                });
+            });
+
+            // Additional animations for specific elements
+            gsap.from("#settings-toggle", {
+                y: 20,
+                opacity: 0,
+                duration: 1 * animationSpeed,
+                delay: 1 * animationSpeed,
+                ease: "power3.out"
+            });
+
+            // Animate client logos with stagger
+            gsap.from(".client-logo", {
+                scrollTrigger: {
+                    trigger: "#clients",
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.6 * animationSpeed,
+                stagger: 0.1 * animationSpeed,
+                ease: "power3.out"
+            });
+
+            // Animate t-shirt cards with stagger
+            gsap.from(".t-shirt-card", {
+                scrollTrigger: {
+                    trigger: "#services",
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.6 * animationSpeed,
+                stagger: 0.1 * animationSpeed,
+                ease: "power3.out"
+            });
+
+            // Animate steps with stagger
+            gsap.from(".step-item", {
+                scrollTrigger: {
+                    trigger: "#how-to-start",
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                },
+                x: -30,
+                opacity: 0,
+                duration: 0.6 * animationSpeed,
+                stagger: 0.15 * animationSpeed,
+                ease: "power3.out"
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.remove('shadow-lg');
+                navbar.classList.remove('py-2');
+                navbar.classList.add('py-4');
+            }
+        });
+    </script>
+</body>
+
+</html>

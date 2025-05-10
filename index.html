@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>22Studio - Custom T-Shirt Printing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="font-sans">
+    <!-- Floating Settings Button -->
+    <button id="settings-toggle"
+        class="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:bg-secondary transition-all">
+        <i class="fas fa-cog text-xl"></i>
+    </button>
+
+    <button id="whatsap-toggle"
+        class="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-[#075e54] text-white shadow-lg flex items-center justify-center hover:bg-secondary transition-all">
+        <i class="fa-brands fa-whatsapp text-xl"></i>
+    </button>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel"
+        class="settings-panel fixed top-0 right-0 w-64 h-full bg-white dark:bg-gray-800 shadow-lg z-40 p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold">Theme Settings</h3>
+            <button id="close-settings" class="text-gray-500 hover:text-primary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="mb-6">
+            <h4 class="font-medium mb-3">Color Theme</h4>
+            <div class="flex space-x-3">
+                <button data-theme="light"
+                    class="theme-btn w-10 h-10 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button data-theme="dark"
+                    class="theme-btn w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button data-theme="colorful"
+                    class="theme-btn w-10 h-10 rounded-full bg-gradient-to-r from-red-500 via-blue-500 to-yellow-500 flex items-center justify-center">
+                    <i class="fas fa-palette text-white"></i>
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <h4 class="font-medium mb-3">Animation Speed</h4>
+            <div class="flex items-center">
+                <input type="range" id="animation-speed" min="0.5" max="2" step="0.1" value="1" class="w-full">
+                <span id="speed-value" class="ml-2 text-sm">1x</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar fixed top-0 left-0 right-0 shadow-md z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center gap-2 text-2xl font-bold text-primary">
+                        <img src="/assets/image/Logo.svg" alt="Studio Logo" class="w-8 h-8 object-contain" />
+                        <span style="color: var(--primary)">Studio</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link font-medium" style="color: var(--text)">Tentang</a>
+                    <a href="#services" class="nav-link font-medium" style="color: var(--text)">Service</a>
+                    <a href="#projects" class="nav-link font-medium" style="color: var(--text)">Projek</a>
+                    <a href="#how-to-start" class="nav-link font-medium" style="color: var(--text)">Cara Order</a>
+                    <a href="#contact" class="nav-link font-medium" style="color: var(--text)">Kontak</a>
+                    <a href="#quote" class="px-4 py-2 rounded-full font-medium"
+                        style="background-color: var(--primary); color: white">Order</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden hamburger focus:outline-none">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu md:hidden mt-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#about" class="nav-link font-medium py-2" style="color: var(--text)">Tentang</a>
+                    <a href="#services" class="nav-link font-medium py-2" style="color: var(--text)">Service</a>
+                    <a href="#projects" class="nav-link font-medium py-2" style="color: var(--text)">Projek</a>
+                    <a href="#how-to-start" class="nav-link font-medium py-2" style="color: var(--text)">Memulai</a>
+                    <a href="#contact" class="nav-link font-medium py-2" style="color: var(--text)">Kontak</a>
+                    <a href="#quote" class="px-4 py-2 rounded-full font-medium text-center"
+                        style="background-color: var(--primary); color: white">Mulai</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-24 pb-16 md:pt-32 md:pb-24 section-bg">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="flex flex-col gap-12 md:gap-0 md:flex-row items-center">
+                <div class="md:w-1/2 md:pb-10 mr-10 md:mb-0 hidden-section">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">Custom T-Shirts That <span
+                            class="text-primary">Tell Your Story</span></h1>
+                    <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">Dari konsep hingga kreasi, kami
+                        mewujudkan ide Anda dengan kaos oblong berkualitas premium.</p>
+                    <div class="flex space-x-4">
+                        <a href="#how-to-start" class="btn-primary px-8 py-3 rounded-full font-medium">Memulai</a>
+                        <a href="#projects"
+                            class="px-8 py-3 rounded-full font-medium border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all">Lihat
+                            Portofilio</a>
+                    </div>
+                </div>
+                <div class="w-full h-full md:w-1/2 md:pb-10 hidden-section">
+                    <div
+                        class="slider-container relative w-full max-w-4xl h-96 md:h-[34rem] overflow-hidden rounded-xl shadow-2xl">
+                        <!-- Slides -->
+                        <div class="slide absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out active"
+                            data-index="0">
+                            <img src="/assets/image/gambar2.jpg" alt="Nature"
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-2xl">
+                            </div>
+                        </div>
+
+                        <div class="slide absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out next"
+                            data-index="1">
+                            <img src="/assets/image/gambar3.jpg" alt="City"
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-2xl">
+                            </div>
+                        </div>
+
+                        <div class="slide absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out hidden"
+                            data-index="2">
+                            <img src="/assets/image/gambar4.jpg" alt="Ocean"
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-2xl">
+                            </div>
+                        </div>
+
+                        <div class="slide absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out hidden"
+                            data-index="3">
+                            <img src="/assets/image/gambar5.jpg" alt="Mountains"
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-2xl">
+                            </div>
+                        </div>
+
+                        <div class="slide absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out hidden"
+                            data-index="4">
+                            <img src="/assets/image/jumbotron.jpg" alt="Desert"
+                                class="w-full h-full object-cover rounded-2xl">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-2xl">
+                            </div>
+                        </div>
+
+                        <!-- Navigation dots -->
+                        <div class="slider-nav flex space-x-2">
+                            <button class="slider-nav-dot w-3 h-3 rounded-full bg-white/50 active"
+                                data-index="0"></button>
+                            <button class="slider-nav-dot w-3 h-3 rounded-full bg-white/50" data-index="1"></button>
+                            <button class="slider-nav-dot w-3 h-3 rounded-full bg-white/50" data-index="2"></button>
+                            <button class="slider-nav-dot w-3 h-3 rounded-full bg-white/50" data-index="3"></button>
+                            <button class="slider-nav-dot w-3 h-3 rounded-full bg-white/50" data-index="4"></button>
+                        </div>
+
+                        <!-- Controls -->
+                        <button
+                            class="slider-control absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all"
+                            id="prev">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <button
+                            class="slider-control absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-all"
+                            id="next">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 md:py-24">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Tentang <span class="text-primary">22Studio</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Kami bersemangat untuk
+                    menciptakan pakaian khusus berkualitas tinggi yang membantu individu dan bisnis mengekspresikan
+                    identitas unik mereka.</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center hidden-section">
+                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+                    <img src="/assets/image/gambar1.jpg" alt="Our Workshop" class="rounded-xl shadow-lg">
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-6">Our <span class="text-secondary">Story</span></h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">Didirikan pada tahun 2015, 22Studio dimulai
+                        sebagai usaha kecil dengan satu mesin sablon. Kini, kami telah berkembang menjadi
+                        penyedia layanan pakaian khusus dengan peralatan canggih dan tim desainer serta pencetak yang
+                        bersemangat.
+
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">Yang membedakan kami adalah komitmen kami terhadap
+                        kualitas dan kepuasan pelanggan. Setiap kaos yang kami cetak menjalani pemeriksaan kualitas yang
+                        ketat untuk memastikannya memenuhi standar tinggi kami.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Bahan Berkualitas Premium</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Tinta Ramah Lingkungan</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Perputaran Cepat</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            <span>Layanan Desain Kustom</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-24 section-bg">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Services</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Kami menawarkan
+                    berbagai teknik pencetakan yang komprehensif untuk mewujudkan visi Anda pada kain.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-tshirt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Screen Printing</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Sablon tradisional untuk desain yang cerah dan
+                        tahan lama. Sempurna untuk pesanan massal dengan desain sederhana hingga rumit.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Terbaik untuk pesanan 25+</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Warna-warna cerah</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Cetakan tahan lama</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.1s">
+                    <div
+                        class="w-16 h-16 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-spray-can text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">DTF Printing</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Pencetakan langsung pada pakaian untuk desain yang
+                        realistis. Ideal untuk pesanan kecil atau desain dengan banyak warna.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Cocok untuk 1-24 buah</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Tidak ada batasan warna</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Perasaan tangan yang lembut</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.2s">
+                    <div class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-cut text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Embroidery</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Layanan bordir premium untuk tampilan profesional
+                        dan mewah. Sempurna untuk logo dan teks pada polo dan topi.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Penampilan profesional</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Tahan lama</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Cocok untuk pakaian kerja</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.3s">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-palette text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Custom Design</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Desainer berbakat kami akan bekerja sama dengan
+                        Anda untuk menciptakan karya seni yang sempurna untuk pakaian khusus Anda. </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Desainer profesional</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Revisi tanpa batas</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Perputaran cepat</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.4s">
+                    <div
+                        class="w-16 h-16 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-tshirt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Sublimation</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Cetakan penuh warna untuk pakaian performa dan
+                        pakaian berwarna terang. </p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Cetakan menyeluruh yang cerah</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Tidak ada retak atau terkelupas</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-primary mr-2"></i>
+                            <span>Bagus untuk tim olahraga</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg t-shirt-card hidden-section"
+                    style="transition-delay: 0.5s">
+                    <div class="w-16 h-16 bg-accent bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-box-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Private Label</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Ciptakan lini pakaian Anda sendiri dengan label,
+                        tag, dan kemasan khusus.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Pencitraan merek khusus</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Layanan label putih</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-secondary mr-2"></i>
+                            <span>Diskon massal</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-16 md:py-24">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Projects</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Lihatlah beberapa karya
+                    terbaru kami dan dapatkan inspirasi untuk proyek busana khusus Anda berikutnya.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80"
+                        alt="Band T-Shirts"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Merchandise Band Musik</h3>
+                        <p class="opacity-90">Kaos tur sablon untuk band rock indie</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.1s">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="Company Uniforms"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Seragam Perusahaan</h3>
+                        <p class="opacity-90">Polo bordir khusus untuk perusahaan teknologi</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.2s">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80"
+                        alt="Sports Team Jerseys"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Jersey Tim Olahraga</h3>
+                        <p class="opacity-90">Jersey basket sublimasi untuk liga lokal</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.3s">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="Event T-Shirts"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Kaos Charity</h3>
+                        <p class="opacity-90">Kaos cetak DTG untuk penggalangan dana lari 5K</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.4s">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=776&q=80"
+                        alt="Fashion Line"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Streetwear Collection</h3>
+                        <p class="opacity-90">Kaos grafis edisi terbatas untuk merek lokal</p>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-xl shadow-lg hidden-section"
+                    style="transition-delay: 0.5s">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+                        alt="School Spirit"
+                        class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div class="absolute bottom-0 left-0 p-6 text-white">
+                        <h3 class="text-xl font-bold mb-2">Pakaian Sekolah</h3>
+                        <p class="opacity-90">Hoodie sablon untuk sekolah menengah</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 hidden-section">
+                <a href="#contact" class="btn-primary px-8 py-3 rounded-full font-medium inline-block">Mulai Project
+                    Mu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clients Section -->
+    <section id="clients" class="py-16 md:py-24 section-bg">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Clients</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Kami memiliki hak
+                    istimewa untuk bekerja sama dengan merek dan organisasi luar biasa di berbagai industri.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
+                <div class="flex justify-center hidden-section">
+                    <img src="https://upload.wikimedia.org/wikipedia/min/thumb/d/db/Persib_Bandung.svg/1200px-Persib_Bandung.svg.png"
+                        alt="Client Logo" class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center delay-100">
+                    <img src="https://brandlogos.net/wp-content/uploads/2021/05/lacoste-crocodiles-logo.png"
+                        alt="Client Logo" class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center delay-200">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center delay-300">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" alt="Client Logo"
+                        class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center delay-400">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Insignia_of_the_Indonesian_National_Armed_Forces.svg"
+                        alt="Client Logo" class="client-logo h-12 md:h-16">
+                </div>
+                <div class="flex justify-center delay-500">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Pertamina_Logo.svg/1200px-Pertamina_Logo.svg.png"
+                        alt="Client Logo" class="client-logo h-12 md:h-16">
+                </div>
+            </div>
+
+            <div class="mt-16 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-12 hidden-section">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/3 mb-8 md:mb-0 flex justify-center">
+                        <div class="w-32 h-32 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                            <i class="fas fa-quote-left text-4xl"></i>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 md:pl-10">
+                        <blockquote class="text-lg md:text-xl italic text-gray-600 dark:text-gray-300 mb-6">"22Studio
+                            mengirimkan kaos berkualitas luar biasa untuk acara retret perusahaan kami. Warnanya cerah,
+                            ukurannya pas, dan seluruh prosesnya lancar. Kami pasti akan menggunakan mereka untuk semua
+                            kebutuhan pakaian kami di masa mendatang."</blockquote>
+                        <div class="font-bold text-lg">Tino</div>
+                        <div class="text-gray-500">Founder, 22Studio</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Start Section -->
+    <section id="how-to-start" class="py-16 md:py-24">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Mulai <span class="text-primary">Darimana?</span>
+                </h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Hubungi kami untuk
+                    mendiskusikan proyek Anda. Kami akan menanyakan tentang jumlah, desain, warna, preferensi kain, dan
+                    jadwal pengerjaan.</p>
+            </div>
+
+            <div class="steps-container flex flex-col space-y-8 max-w-4xl mx-auto">
+                <div class="step-item flex items-start hidden-section">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Konsultasi</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Hubungi kami untuk mendiskusikan proyek Anda. Kami
+                            akan menanyakan tentang jumlah, desain, warna, preferensi kain, dan jadwal pengerjaan.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Design</h3>
+                        <p class="text-gray-600 dark:text-gray-300">kirimkan karya seni atau pekerjaan Anda kepada
+                            desainer kami.
+                            Kami akan memberikan contoh dan rekomendasi untuk metode pencetakan terbaik.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Persetujuan</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Tinjau dan setujui rancangan akhir. Kami akan
+                            memberikan penawaran harga terperinci dan jadwal produksi.</p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Produksi</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Kami mencetak kaos Anda dengan hati-hati dan teliti.
+                            Pemeriksaan kualitas dilakukan di setiap tahap.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item flex items-start hidden-section">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Pengiriman</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Kemeja kustom Anda dikemas dengan hati-hati dan
+                            dikirim ke depan pintu Anda atau siap diambil.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="mt-16 bg-white dark:bg-gray-800 bg-opacity-10 rounded-xl p-8 md:p-12 text-center hidden-section">
+                <h3 class="text-2xl md:text-3xl font-bold mb-6">Siap Membuat Kaos Kustom Anda?</h3>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">Baik Anda
+                    memerlukan
+                    10 kaos atau 10.000 kaos, kami siap membantu mewujudkan visi Anda dengan pakaian khusus berkualitas
+                    premium.</p>
+                <a href="#contact" class="btn-primary px-8 py-3 rounded-full font-medium inline-block">Memulai Gratis
+                    Konsultas</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 section-bg">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact <span class="text-primary">Us</span></h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Ada pertanyaan atau
+                    siap untuk memulai proyek Anda? Hubungi tim kami—kami senang membantu!</p>
+            </div>
+
+            <div class="flex flex-col mb-16 lg:flex-row gap-12">
+                <div class="lg:w-1/2 hidden-section">
+                    <form id="contact-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block mb-2 font-medium">Nama</label>
+                                <input type="text" id="name" class="w-full px-4 py-3 rounded-lg" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block mb-2 font-medium">Email</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 rounded-lg" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="subject" class="block mb-2 font-medium">Subject</label>
+                            <input type="text" id="subject" class="w-full px-4 py-3 rounded-lg" required>
+                        </div>
+                        <div>
+                            <label for="message" class="block mb-2 font-medium">Pesan</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 rounded-lg" required></textarea>
+                        </div>
+                        <button type="submit"
+                            class="btn-primary px-8 py-3 rounded-full font-medium w-full md:w-auto">Kirim Pesan</button>
+                    </form>
+                </div>
+
+                <div class="lg:w-1/2 hidden-section">
+                    <div class="map-container rounded-xl overflow-hidden shadow-lg">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.1439687836223!2d107.4875514745986!3d-6.873347767250977!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e5445d090367%3A0xb859f3fd6ee9bba4!2s22Studio%20Sablon%20konveksi%20bandung!5e0!3m2!1sid!2sid!4v1746873374947!5m2!1sid!2sid"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-16 hidden-section">
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-start">
+                        <div
+                            class="px-5 py-5 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fas fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">Lokasi</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Jl. Cimerang No.14, RT.03/RW.05, Cimerang,
+                                Kec. Padalarang, Kabupaten Bandung Barat, Jawa Barat 40553</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div
+                            class="px-5 py-5 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">Phone</h4>
+                            <p class="text-gray-600 dark:text-gray-300">(555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div
+                            class="px-5 py-5 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">Email</h4>
+                            <p class="text-gray-600 dark:text-gray-300">test@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div
+                            class="px-5 py-5 rounded-full bg-primary bg-opacity-10 flex items-center justify-center mr-4">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">Beroprasi</h4>
+                            <p class="text-gray-600 dark:text-gray-300">Senin-Jumat: 09.00 - 18.00</p>
+                            <p class="text-gray-600 dark:text-gray-300">Sabtu: 10.00 - 16.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="how-to-start" class="py-16 md:py-24">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="text-center mb-16 hidden-section">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Frequently <span class="text-primary">Asked
+                        Questions</span>
+                </h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Hubungi kami untuk
+                    Temukan jawaban atas pertanyaan umum tentang produk dan layanan kami.</p>
+            </div>
+
+            <div class="w-full max-w-3xl mx-auto">
+
+                <div class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden ">
+                        <button
+                            class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                            <span class="text-lg md:text-xl font-medium ">How do I create an
+                                account?</span>
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-5 md:px-6">
+                            <div class="pb-5 md:pb-6">
+                                <p>Creating an account is simple! Click on the "Sign Up" button at the top right corner
+                                    of our
+                                    website, fill in your details including your email address and a secure password,
+                                    and you'll
+                                    be ready to go. We'll send you a confirmation email to verify your account.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden ">
+                        <button
+                            class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                            <span class="text-lg md:text-xl font-medium ">What payment methods do you
+                                accept?</span>
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-5 md:px-6">
+                            <div class="pb-5 md:pb-6">
+                                <p>We accept all major credit and debit cards including Visa, MasterCard, and American
+                                    Express.
+                                    We also support payments through PayPal, Apple Pay, and Google Pay for your
+                                    convenience. All
+                                    transactions are securely processed with encryption.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden ">
+                        <button
+                            class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                            <span class="text-lg md:text-xl font-medium ">How can I reset my
+                                password?</span>
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-5 md:px-6">
+                            <div class="pb-5 md:pb-6">
+                                <p>If you've forgotten your password, go to the login page and click on "Forgot
+                                    Password". Enter
+                                    the email address associated with your account, and we'll send you a link to reset
+                                    your
+                                    password. The link will expire in 24 hours for security reasons.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 4 -->
+                    <div class="faq-item bg-white dark:bg-gray-800  rounded-xl shadow-sm overflow-hidden ">
+                        <button
+                            class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                            <span class="text-lg md:text-xl font-medium ">What is your refund
+                                policy?</span>
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-5 md:px-6">
+                            <div class="pb-5 md:pb-6">
+                                <p>We offer a 30-day money-back guarantee on all our products. If you're not satisfied
+                                    with your
+                                    purchase for any reason, simply contact our support team within 30 days of your
+                                    purchase
+                                    date, and we'll process your refund. Digital products may have different terms which
+                                    will be
+                                    specified at purchase.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 5 -->
+                    <div class="faq-item bg-white dark:bg-gray-800  rounded-xl shadow-sm overflow-hidden ">
+                        <button
+                            class="faq-toggle w-full flex items-center justify-between p-5 md:p-6 text-left focus:outline-none">
+                            <span class="text-lg md:text-xl font-medium ">How do I contact customer
+                                support?</span>
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-content px-5 md:px-6">
+                            <div class="pb-5 md:pb-6">
+                                <p>Our customer support team is available 24/7 to assist you. You can reach us by email
+                                    at
+                                    support@example.com, through the live chat feature on our website, or by calling our
+                                    toll-free number at 1-800-123-4567. Average response time is under 2 hours during
+                                    business
+                                    hours.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-10 text-center">
+                    <p class="mb-6">Masih ada pertanyaan? Kami siap membantu!</p>
+                    <a href="#how-to-start" class="btn-primary px-8 py-3 rounded-full font-medium">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="lg:max-w-6xl container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <a href="#" class="text-2xl font-bold text-white mb-4 inline-block">22<span
+                            class="text-primary">Studio</span></a>
+                    <p class="text-gray-400 mb-4">Cetak kaos kustom premium untuk bisnis, organisasi, dan individu.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">Tentang</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Service</a>
+                        </li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projek</a>
+                        </li>
+                        <li><a href="#how-to-start" class="text-gray-400 hover:text-white transition-colors">Cara
+                                Order</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Service</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Screen Printing</a>
+                        </li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">DTF
+                                Printing</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Embroidery</a>
+                        </li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Sublimation</a>
+                        </li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">Design
+                                Services</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Berkoneksi untuk mendapatkan pembaruan tentang penawaran khusus dan
+                        update baru.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email"
+                            class="px-4 py-2 rounded-l-lg text-gray-900 w-full">
+                        <button type="submit" class="bg-primary px-4 py-2 rounded-r-lg text-white">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 22Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="navbar.js"></script>
+    <script src="slider.js"></script>
+</body>
+
+</html>
