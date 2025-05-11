@@ -3,17 +3,23 @@
   --secondary: #10b981;
   --accent: #f59e0b;
   --text: #1f2937;
+  --text-dark: #e5e7eb;
   --bg: #ffffff;
   --section-bg: #f9fafb;
+  --card-bg: #f9fafb;
+  --dark-bg: #1f2937;
 }
 
 .dark-theme {
   --primary: #818cf8;
   --secondary: #6ee7b7;
   --accent: #fbbf24;
+  --text-dark: #1f2937;
   --text: #e5e7eb;
   --bg: #1a1a2e;
   --section-bg: #16213e;
+  --card-bg: #1f2937;
+  --dark-bg: #f9fafb;
 }
 
 .colorful-theme {
@@ -21,8 +27,11 @@
   --secondary: #2563eb;
   --accent: #f59e0b;
   --text: #1f2937;
+  --text-dark: #e5e7eb;
   --bg: #ffffff;
   --section-bg: #f9fafb;
+  --card-bg: #f9fafb;
+  --dark-bg: #1f2937;
 }
 
 body {
@@ -32,6 +41,22 @@ body {
 }
 
 /* Navbar */
+
+.bg-toogle-dark {
+  color: var(--text-dark);
+  background-color: var(--dark-bg);
+}
+
+.bg-toogle-light {
+  color: var(--text);
+  background-color: var(--bg);
+}
+
+.card-bg {
+  color: var(--text);
+  background-color: var(--card-bg);
+  transition: background-color 0.3s, color 0.3s;
+}
 
 .slider-container {
   perspective: 1000px;
