@@ -10,8 +10,8 @@ mobileMenuButton.addEventListener("click", () => {
 // Close mobile menu when clicking on a link
 document.querySelectorAll("#mobile-menu a").forEach((link) => {
   link.addEventListener("click", () => {
-    mobileMenu.classList.remove("open");
-    mobileMenuButton.classList.remove("active");
+    mobileMenu.classList.toggle("open");
+    mobileMenuButton.classList.toggle("active");
   });
 });
 
