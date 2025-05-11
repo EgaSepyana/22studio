@@ -55,7 +55,7 @@ body {
 .card-bg {
   color: var(--text);
   background-color: var(--card-bg);
-  transition: background-color 0.3s, color 0.3s;
+  transition: all 0.5s;
 }
 
 .slider-container {
