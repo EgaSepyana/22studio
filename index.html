@@ -658,24 +658,29 @@
 
             <div class="flex flex-col mb-16 lg:flex-row gap-12">
                 <div class="lg:w-1/2 hidden-section">
-                    <form id="contact-form" class="space-y-6">
+                    <form id="contact-form" class="gform space-y-6" method="POST" data-email="22Studio.tino@gmail.com" action="https://script.google.com/macros/s/AKfycbzs2uCsuGLBFdVgsnNo-iqBxvjRAOW1lqTTAm0jk1nwLSiW_5VBLd9IIicy-x_CEYWy/exec">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="name" class="block mb-2 font-medium">Nama</label>
-                                <input type="text" id="name" class="w-full px-4 py-3 rounded-lg" required>
+                                <label for="nama" class="block mb-2 font-medium">Nama</label>
+                                <input type="text" name="nama" id="nama" class="w-full px-4 py-3 rounded-lg" required>
                             </div>
                             <div>
                                 <label for="email" class="block mb-2 font-medium">Email</label>
-                                <input type="email" id="email" class="w-full px-4 py-3 rounded-lg" required>
+                                <input type="email" name="email" id="email" class="w-full px-4 py-3 rounded-lg" required>
                             </div>
                         </div>
                         <div>
                             <label for="subject" class="block mb-2 font-medium">Subject</label>
-                            <input type="text" id="subject" class="w-full px-4 py-3 rounded-lg" required>
+                            <input type="text" name="subject" id="subject" class="w-full px-4 py-3 rounded-lg" required>
                         </div>
                         <div>
-                            <label for="message" class="block mb-2 font-medium">Pesan</label>
-                            <textarea id="message" rows="5" class="w-full px-4 py-3 rounded-lg" required></textarea>
+                            <label for="pesan" class="block mb-2 font-medium">Pesan</label>
+                            <textarea id="pesan" name="pesan" rows="5" class="w-full px-4 py-3 rounded-lg" required></textarea>
+                        </div>
+
+                        <div class="hidden">
+                            <label for="honeypot">To help avoid spam, utilize a Honeypot technique with a hidden text field; must be empty to submit the form! Otherwise, we assume the user is a spam bot.</label>
+                            <input id="honeypot" type="text" name="honeypot" value="" />
                         </div>
                         <button type="submit"
                             class="btn-primary px-8 py-3 rounded-full font-medium w-full md:w-auto">Kirim Pesan</button>
@@ -957,6 +962,51 @@
         </div>
     </section>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden p-4 z-50 modal-enter">
+        <div class="card-bg rounded-2xl max-w-md w-full mx-4 overflow-hidden shadow-2xl modal-content-enter relative">
+            <!-- Confetti container -->
+            <div id="confettiContainer" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
+            
+            <div class="p-8 text-center">
+                <div class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                    <div class="circle-pulse"></div>
+                    <div class="circle-pulse" style="animation-delay: 0.5s"></div>
+                    <i class="fas fa-paper-plane text-primary text-4xl paper-plane relative z-10"></i>
+                    <div id="planeContainer"></div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-2">Email Sent Successfully!</h2>
+                <p class="mb-6">Your message is flying through the internet to its destination.</p>
+                <div class="bg-primary-transparent rounded-lg p-4 mb-6 text-left">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-check-circle text-primary mt-1"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-primary">
+                                We've sent your email and a confirmation to your inbox.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="hideModal()" class="w-full btn-primary text-white font-medium py-3 px-4 rounded-lg duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    Got it, thanks!
+                </button>
+            </div>
+            
+            <div class="card-bg px-6 py-4 flex items-center justify-between border-t border-primary">
+                <p class="text-sm">
+                    Need help? <a href="#" class="text-blue-600 hover:underline">Contact support</a>
+                </p>
+                <button onclick="hideModal()" class="text-gray-400 hover:text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-12">
         <div class="lg:max-w-6xl container mx-auto px-6">
@@ -1036,6 +1086,7 @@
     <script src="script.js"></script>
     <script src="navbar.js"></script>
     <script src="slider.js"></script>
+    <script src="form-submission-handler.js"></script>
 </body>
 
 </html>
