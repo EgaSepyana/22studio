@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap");
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------
+   Design tokens — "Ink Registration" system
+   Grounded in screen-printing craft: spot-ink swatches, canvas/paper
+   surfaces, mono "spec sheet" labels for stats & eyebrows.
+   --------------------------------------------------------------------- */
+:root {
+  --canvas: #faf8f3;
+  --surface: #ffffff;
+  --ink: #171512;
+  --muted: #6b6558;
+  --border: #e4dfd2;
+
+  --primary: #6599ff; /* logo blue */
+  --primary-ink: #14120f;
+  --secondary: #0f6f6b; /* ink teal */
+  --accent: #e8a736; /* ink ochre */
+  --accent-2: #f2622e; /* ink orange, swatch only */
+}
+
+.dark {
+  --canvas: #14120f;
+  --surface: #1e1b17;
+  --ink: #f5f1e8;
+  --muted: #a39c8c;
+  --border: #2c2820;
+
+  --primary: #6599ff; /* logo blue */
+  --primary-ink: #14120f;
+  --secondary: #14b8a6;
+  --accent: #f2b705;
+  --accent-2: #f2622e;
+}
+
+@theme {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
