@@ -6,6 +6,7 @@ import OrderPage from "./pages/OrderPage";
 import CatalogPage from "./pages/CatalogPage";
 import LacakOrderPage from "./pages/LacakOrderPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/order" element={<OrderPage />} />
             <Route path="/lacak-order" element={<LacakOrderPage />} />
             <Route path="/lacak-order/status" element={<OrderStatusPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
