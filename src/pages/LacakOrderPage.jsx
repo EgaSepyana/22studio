@@ -2,7 +2,8 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Loader2, TriangleAlert } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
-import { lookupOrder } from "../services/orderTracking";
+import { fetchOrderTimeline } from "../services/orderTracking";
+import { encodeTrackingToken } from "../lib/trackingToken";
 import { WA_LINK } from "../data/content";
 
 export default function LacakOrderPage() {
@@ -10,7 +11,7 @@ export default function LacakOrderPage() {
   useScrollReveal(scope);
   const navigate = useNavigate();
 
-  const [orderId, setOrderId] = useState("");
+  const [invoiceId, setInvoiceId] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | error
   const [errorMsg, setErrorMsg] = useState("");
@@ -21,12 +22,15 @@ export default function LacakOrderPage() {
     setErrorMsg("");
 
     try {
-      const order = await lookupOrder({ orderId, phone });
-      navigate(`/lacak-order/status/${order.orderId}`);
-    } catch {
+      const order = await fetchOrderTimeline({ noWa: phone, invoiceId });
+      const token = await encodeTrackingToken({ invoiceId: order.orderId, noWa: phone });
+      navigate(`/lacak-order/status?t=${encodeURIComponent(token)}`);
+    } catch (err) {
       setStatus("error");
       setErrorMsg(
-        "Nomor pesanan atau nomor WhatsApp tidak cocok dengan data kami. Periksa kembali, atau hubungi tim kami."
+        err.status === 429
+          ? err.message
+          : "Nomor pesanan atau nomor WhatsApp tidak cocok dengan data kami. Periksa kembali, atau hubungi tim kami."
       );
       return;
     }
@@ -40,23 +44,23 @@ export default function LacakOrderPage() {
           <p className="eyebrow mb-3 text-xs text-primary">Lacak Pemesanan</p>
           <h1 className="font-display text-3xl font-bold text-ink md:text-4xl">Cek Status Pesananmu</h1>
           <p className="mt-4 text-lg text-muted">
-            Masukkan nomor pesanan dan nomor WhatsApp yang kamu daftarkan saat order untuk melihat progres
+            Masukkan nomor invoice dan nomor WhatsApp yang kamu daftarkan saat order untuk melihat progres
             produksinya secara real-time.
           </p>
         </div>
 
         <form data-reveal onSubmit={handleSubmit} className="mt-10 space-y-5">
           <div>
-            <label htmlFor="orderId" className="mb-2 block font-medium text-ink">
-              Nomor Pesanan
+            <label htmlFor="invoiceId" className="mb-2 block font-medium text-ink">
+              Nomor Invoice
             </label>
             <input
-              id="orderId"
+              id="invoiceId"
               type="text"
               required
-              placeholder="Contoh: 22ST-2507-A1B2"
-              value={orderId}
-              onChange={(e) => setOrderId(e.target.value)}
+              placeholder="Contoh: INV-20260805-021"
+              value={invoiceId}
+              onChange={(e) => setInvoiceId(e.target.value)}
               className="w-full rounded-lg border border-border bg-canvas px-4 py-3 font-mono uppercase text-ink transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>

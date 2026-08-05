@@ -21,15 +21,15 @@ export default function OrderSummaryCard({ order }) {
           <Package className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
           <div>
             <p className="text-sm text-muted">Pesanan</p>
-            <p className="font-medium text-ink">{order.item}</p>
-            <p className="text-sm text-muted">{order.qty} pcs</p>
+            <p className="font-medium text-ink">{order.item || "Rincian item menyusul dari tim kami"}</p>
+            <p className="text-sm text-muted">{order.qty > 0 ? `${order.qty} pcs` : "—"}</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
           <Calendar className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
           <div>
             <p className="text-sm text-muted">Estimasi Selesai</p>
-            <p className="font-medium text-ink">{order.estimatedReady}</p>
+            <p className="font-medium text-ink">{order.estimatedReady || "Belum ditentukan"}</p>
           </div>
         </div>
         {order.shipping && (
