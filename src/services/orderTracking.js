@@ -1,103 +1,56 @@
-// Mock order-tracking service. Every export here simulates a network call
-// (delay + resolve/reject) so the component layer already behaves like it's
-// talking to a real backend. When the actual API exists, swap the bodies of
-// these functions for real `fetch()` calls — keep the same function
-// signatures and the pages/components won't need to change.
+// Client for the real public order-tracking API — see public_api.md.
+// Every order is identified by EITHER a signed `t` token OR a raw
+// `{ noWa, invoiceId }` pair — both endpoints accept whichever is passed in.
+// Every function here returns the API's `data` payload on success and
+// throws an Error (with a user-facing `.message`) on failure.
 
-import { ORDERS } from "../data/trackingData";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "https://22studio-payroll-system.vercel.app/api/public";
 
-const NETWORK_DELAY = 550;
-const STORAGE_KEY = "22studio_mockup_decisions";
-
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-function normalizePhone(phone) {
-  const digits = String(phone || "").replace(/\D/g, "");
-  return digits.replace(/^0/, "").replace(/^62/, "");
+class ApiError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.status = status;
+  }
 }
 
-function readOverrides() {
+async function parseResponse(res) {
+  let body;
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    body = await res.json();
   } catch {
-    return {};
-  }
-}
-
-function writeOverride(orderId, patch) {
-  const overrides = readOverrides();
-  overrides[orderId] = { ...overrides[orderId], ...patch };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
-}
-
-/** Merges a base dummy order with any locally-simulated state changes (e.g. mockup approval). */
-function withOverrides(order) {
-  if (!order) return order;
-  const override = readOverrides()[order.orderId];
-  if (!override) return order;
-
-  const merged = { ...order, ...override };
-  if (override.mockup) merged.mockup = { ...order.mockup, ...override.mockup };
-  if (override.timeline) merged.timeline = [...order.timeline, ...override.timeline];
-  return merged;
-}
-
-/** Looks up an order by order ID + WhatsApp number (the "Lacak Pemesanan" validation gate). */
-export async function lookupOrder({ orderId, phone }) {
-  await wait(NETWORK_DELAY);
-
-  const id = String(orderId || "").trim().toUpperCase();
-  const normalizedPhone = normalizePhone(phone);
-
-  const order = ORDERS.find(
-    (o) => o.orderId.toUpperCase() === id && normalizePhone(o.noWa) === normalizedPhone
-  );
-
-  if (!order) {
-    const error = new Error("ORDER_NOT_FOUND");
-    error.code = "ORDER_NOT_FOUND";
-    throw error;
+    body = null;
   }
 
-  return withOverrides(order);
-}
-
-/** Fetches an order by ID alone — used by the direct-link status page (no re-auth, like courier tracking links). */
-export async function getOrderById(orderId) {
-  await wait(NETWORK_DELAY);
-  const id = String(orderId || "").trim().toUpperCase();
-  const order = ORDERS.find((o) => o.orderId.toUpperCase() === id);
-  return order ? withOverrides(order) : null;
-}
-
-/** Simulates the customer approving or requesting revision on a mockup. */
-export async function submitMockupDecision(orderId, decision) {
-  await wait(NETWORK_DELAY);
-
-  const base = ORDERS.find((o) => o.orderId === orderId);
-  if (!base) throw new Error("ORDER_NOT_FOUND");
-
-  const now = new Date();
-  const timestamp = now.toISOString().slice(0, 16).replace("T", " ");
-
-  if (decision === "approved") {
-    writeOverride(orderId, {
-      mockup: { status: "approved" },
-      currentStage: "production",
-      currentSubStage: "cutting",
-      timeline: [
-        { stage: "mockup_approval", note: "Mockup disetujui oleh customer.", timestamp },
-        { stage: "production", subStage: "cutting", note: "Produksi dimulai — proses cutting.", timestamp },
-      ],
-    });
-  } else {
-    writeOverride(orderId, {
-      mockup: { status: "revision_requested" },
-      timeline: [
-        { stage: "mockup_approval", note: "Customer meminta revisi mockup.", timestamp },
-      ],
-    });
+  if (!res.ok || !body?.success) {
+    if (res.status === 429) {
+      throw new ApiError("Terlalu banyak percobaan. Coba lagi dalam beberapa saat.", 429);
+    }
+    throw new ApiError(body?.message || "Terjadi kesalahan. Coba lagi.", res.status);
   }
 
-  return getOrderById(orderId);
+  return body.data;
+}
+
+/**
+ * GET /order-timeline — fetches an order's full production timeline.
+ * @param {{ t: string } | { noWa: string, invoiceId: string }} credentials
+ */
+export async function fetchOrderTimeline(credentials) {
+  const params = new URLSearchParams(credentials);
+  const res = await fetch(`${API_BASE_URL}/order-timeline?${params.toString()}`);
+  return parseResponse(res);
+}
+
+/**
+ * POST /orders/design/approve — approves the design, moving Belum Di Proses → Desain Fix.
+ * @param {({ t: string } | { noWa: string, invoiceId: string }) & { note?: string }} credentials
+ */
+export async function approveDesign(credentials) {
+  const res = await fetch(`${API_BASE_URL}/orders/design/approve`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+  return parseResponse(res);
 }

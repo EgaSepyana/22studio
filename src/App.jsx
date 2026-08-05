@@ -17,7 +17,7 @@ export default function App() {
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/order" element={<OrderPage />} />
             <Route path="/lacak-order" element={<LacakOrderPage />} />
-            <Route path="/lacak-order/status/:orderId" element={<OrderStatusPage />} />
+            <Route path="/lacak-order/status" element={<OrderStatusPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
