@@ -2,29 +2,16 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { HERO_SLIDES, HERO_STATS } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import InkSwatchStrip from "../ui/InkSwatchStrip";
 import ImageSlider from "../ui/ImageSlider";
 
-import gambar2 from "../../assets/gambar2.jpg";
-import gambar3 from "../../assets/gambar3.jpg";
-import gambar4 from "../../assets/gambar4.jpg";
-import gambar5 from "../../assets/gambar5.jpg";
-import jumbotron from "../../assets/jumbotron.jpg";
-
-const IMAGE_MAP = {
-  "gambar2.jpg": gambar2,
-  "gambar3.jpg": gambar3,
-  "gambar4.jpg": gambar4,
-  "gambar5.jpg": gambar5,
-  "jumbotron.jpg": jumbotron,
-};
-
-const slides = HERO_SLIDES.map((s) => ({ src: IMAGE_MAP[s.image], alt: s.alt }));
-
 export default function Hero() {
+  const { heroSlides, heroStats } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope, { y: 24, start: "top 95%" });
+
+  const slides = heroSlides.map((s) => ({ src: s.image, alt: s.alt }));
 
   return (
     <header id="hero" ref={scope} className="scroll-mt-20 pb-16 pt-28 md:pb-24 md:pt-36">
@@ -65,7 +52,7 @@ export default function Hero() {
             </div>
 
             <div data-reveal className="mt-10 grid grid-cols-3 gap-6 border-t border-border pt-6">
-              {HERO_STATS.map((stat) => (
+              {heroStats.map((stat) => (
                 <div key={stat.label}>
                   <div className="font-display text-2xl font-bold text-ink md:text-3xl">
                     {stat.value}

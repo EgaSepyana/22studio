@@ -1,12 +1,13 @@
-import { STATS_BAND } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import StatCounter from "../ui/StatCounter";
 
 export default function StatsBand() {
+  const { statsBand } = useCms();
   return (
     <section className="bg-[#171512] py-16 text-white">
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-          {STATS_BAND.map((stat) => (
+          {statsBand.map((stat) => (
             <StatCounter
               key={stat.label}
               value={stat.value}

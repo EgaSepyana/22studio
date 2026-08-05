@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Check, Loader2, TriangleAlert } from "lucide-react";
 import { approveDesign } from "../../services/orderTracking";
-import { WA_LINK } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 
 export default function DesignApprovalCard({ credentials, onApproved }) {
+  const { waLink } = useCms();
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -60,7 +61,7 @@ export default function DesignApprovalCard({ credentials, onApproved }) {
           {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
           Setujui Desain
         </button>
-        <a href={WA_LINK} target="_blank" rel="noreferrer" className="text-sm font-medium text-primary hover:underline">
+        <a href={waLink} target="_blank" rel="noreferrer" className="text-sm font-medium text-primary hover:underline">
           Masih ada revisi? Hubungi kami di WhatsApp
         </a>
       </div>

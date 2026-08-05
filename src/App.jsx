@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./hooks/useTheme";
+import { CmsProvider } from "./context/CmsContext";
 import Layout from "./components/layout/Layout";
 import LandingPage from "./pages/LandingPage";
 import OrderPage from "./pages/OrderPage";
@@ -11,18 +12,20 @@ import NotFoundPage from "./pages/NotFoundPage";
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/catalog" element={<CatalogPage />} />
-            <Route path="/order" element={<OrderPage />} />
-            <Route path="/lacak-order" element={<LacakOrderPage />} />
-            <Route path="/lacak-order/status" element={<OrderStatusPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <CmsProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/catalog" element={<CatalogPage />} />
+              <Route path="/order" element={<OrderPage />} />
+              <Route path="/lacak-order" element={<LacakOrderPage />} />
+              <Route path="/lacak-order/status" element={<OrderStatusPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </CmsProvider>
     </ThemeProvider>
   );
 }

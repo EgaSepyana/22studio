@@ -1,10 +1,11 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { PROJECTS } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import ProjectCard from "../ui/ProjectCard";
 
 export default function Projects() {
+  const { projects } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope, { stagger: 0.06 });
 
@@ -23,7 +24,7 @@ export default function Projects() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.map((project) => (
+          {projects.map((project) => (
             <ProjectCard key={project.title} {...project} />
           ))}
         </div>

@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { SERVICES } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import ServiceCard from "../ui/ServiceCard";
 
 export default function Services() {
+  const { services } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope, { stagger: 0.06 });
 
@@ -22,7 +23,7 @@ export default function Services() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((service) => (
+          {services.map((service) => (
             <ServiceCard key={service.title} {...service} />
           ))}
         </div>

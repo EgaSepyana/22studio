@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Search } from "lucide-react";
-import { NAV_LINKS } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
+  const { navLinks } = useCms();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const isHome = useLocation().pathname === "/";
@@ -38,7 +39,7 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <NavLink
               key={link.href}
               link={link}
@@ -84,7 +85,7 @@ export default function Navbar() {
           }`}
       >
         <div className="flex flex-col gap-1 px-6 pb-4 pt-2">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <NavLink
               key={link.href}
               link={link}

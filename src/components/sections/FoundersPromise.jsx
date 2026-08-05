@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { Quote } from "lucide-react";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { FOUNDERS_PROMISE } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 
 export default function FoundersPromise() {
+  const { foundersPromise } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope);
 
@@ -23,12 +24,12 @@ export default function FoundersPromise() {
             <div className="md:w-2/3 md:pl-6">
               <p className="eyebrow mb-3 text-xs text-primary">Janji Founder</p>
               <blockquote className="text-lg italic text-ink md:text-xl">
-                &ldquo;{FOUNDERS_PROMISE.quote}&rdquo;
+                &ldquo;{foundersPromise.quote}&rdquo;
               </blockquote>
               <div className="mt-6 font-display text-lg font-bold text-ink">
-                {FOUNDERS_PROMISE.name}
+                {foundersPromise.name}
               </div>
-              <div className="text-muted">{FOUNDERS_PROMISE.role}</div>
+              <div className="text-muted">{foundersPromise.role}</div>
             </div>
           </div>
         </div>

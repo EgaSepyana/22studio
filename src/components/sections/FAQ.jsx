@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { FAQS, WA_LINK } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import AccordionItem from "../ui/AccordionItem";
 
 export default function FAQ() {
+  const { faqs, waLink } = useCms();
   const scope = useRef(null);
   const [openIndex, setOpenIndex] = useState(0);
   useScrollReveal(scope, { stagger: 0.04 });
@@ -22,7 +23,7 @@ export default function FAQ() {
         </div>
 
         <div className="mx-auto max-w-3xl space-y-4">
-          {FAQS.map((faq, i) => (
+          {faqs.map((faq, i) => (
             <div key={faq.q} data-reveal>
               <AccordionItem
                 question={faq.q}
@@ -36,7 +37,7 @@ export default function FAQ() {
           <div data-reveal className="pt-6 text-center">
             <p className="mb-6 text-muted">Masih ada pertanyaan? Kami siap membantu!</p>
             <a
-              href={WA_LINK}
+              href={waLink}
               target="_blank"
               rel="noreferrer"
               className="inline-block rounded-full bg-primary px-8 py-3 font-medium text-primary-ink transition-transform hover:-translate-y-0.5"

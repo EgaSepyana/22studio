@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { GARMENT_TYPES, FABRIC_TYPES, PRINT_METHODS, SIZES } from "../data/orderOptions";
 import { estimateOrder, formatRupiah } from "../data/pricing";
-import { FORM_ENDPOINT, WA_PHONE } from "../data/content";
+import { useCms } from "../context/CmsContext";
 import OptionCardGroup from "../components/order/OptionCardGroup";
 import SizeChart from "../components/order/SizeChart";
 import NameNumberList from "../components/order/NameNumberList";
@@ -51,6 +51,7 @@ function buildWaMessage({ nama, garment, fabric, print, totalQty, sizeQty, estim
 }
 
 export default function OrderPage() {
+  const { waPhone, formEndpoint } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope);
 
@@ -89,7 +90,7 @@ export default function OrderPage() {
       estimate,
       hasFiles: form.files.length > 0,
     });
-    const nextWaLink = `https://api.whatsapp.com/send?phone=${WA_PHONE}&text=${encodeURIComponent(message)}`;
+    const nextWaLink = `https://api.whatsapp.com/send?phone=${waPhone}&text=${encodeURIComponent(message)}`;
 
     const payload = {
       nama: form.nama,
@@ -115,7 +116,7 @@ export default function OrderPage() {
       .join("&");
 
     try {
-      const res = await fetch(FORM_ENDPOINT, {
+      const res = await fetch(formEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encoded,

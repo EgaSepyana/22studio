@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import { Send } from "lucide-react";
-import { NAV_LINKS, SERVICES, CONTACT_INFO } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import { FacebookIcon, InstagramIcon, TikTokIcon } from "../ui/BrandIcons";
 
 export default function Footer() {
+  const { navLinks, services, contactInfo } = useCms();
   const isHome = useLocation().pathname === "/";
 
   const HashLink = ({ href, children }) =>
@@ -45,7 +46,7 @@ export default function Footer() {
           <div>
             <h3 className="font-display text-lg font-bold">Navigasi</h3>
             <ul className="mt-4 space-y-2">
-              {NAV_LINKS.map((link) => (
+              {navLinks.map((link) => (
                 <li key={link.href}>
                   <HashLink href={link.href}>{link.label}</HashLink>
                 </li>
@@ -71,7 +72,7 @@ export default function Footer() {
           <div>
             <h3 className="font-display text-lg font-bold">Layanan</h3>
             <ul className="mt-4 space-y-2">
-              {SERVICES.slice(0, 5).map((s) => (
+              {services.slice(0, 5).map((s) => (
                 <li key={s.title}>
                   <HashLink href="#services">{s.title}</HashLink>
                 </li>
@@ -107,7 +108,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-white/50 md:flex-row">
           <p>&copy; {new Date().getFullYear()} 22Studio. All rights reserved.</p>
-          <p>{CONTACT_INFO.email}</p>
+          <p>{contactInfo.email}</p>
         </div>
       </div>
     </footer>

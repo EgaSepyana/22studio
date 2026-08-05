@@ -4,9 +4,10 @@ import { Search, Loader2, TriangleAlert } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { fetchOrderTimeline } from "../services/orderTracking";
 import { encodeTrackingToken } from "../lib/trackingToken";
-import { WA_LINK } from "../data/content";
+import { useCms } from "../context/CmsContext";
 
 export default function LacakOrderPage() {
+  const { waLink } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope);
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ export default function LacakOrderPage() {
               <TriangleAlert className="mt-0.5 h-4 w-4 flex-shrink-0" />
               <span>
                 {errorMsg}{" "}
-                <a href={WA_LINK} target="_blank" rel="noreferrer" className="font-medium underline">
+                <a href={waLink} target="_blank" rel="noreferrer" className="font-medium underline">
                   Hubungi via WhatsApp
                 </a>
                 .

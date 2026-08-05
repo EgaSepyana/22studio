@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { STEPS } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 
 export default function HowToOrder() {
+  const { steps } = useCms();
   const scope = useRef(null);
   useScrollReveal(scope, { stagger: 0.1 });
 
@@ -22,7 +23,7 @@ export default function HowToOrder() {
 
         <div className="mx-auto max-w-3xl">
           <ol className="space-y-6">
-            {STEPS.map((step) => (
+            {steps.map((step) => (
               <li
                 key={step.stage}
                 data-reveal

@@ -1,10 +1,11 @@
-import { WA_LINK } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import { WhatsAppIcon } from "../ui/BrandIcons";
 
 export default function WhatsAppButton() {
+  const { waLink } = useCms();
   return (
     <a
-      href={WA_LINK}
+      href={waLink}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat via WhatsApp"

@@ -1,24 +1,25 @@
 import { useRef, useState } from "react";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useScrollReveal } from "../../hooks/useScrollReveal";
-import { CONTACT_INFO, FORM_ENDPOINT } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 import SuccessModal from "../ui/SuccessModal";
-
-const FIELDS = [
-  { icon: MapPin, label: "Lokasi", value: CONTACT_INFO.address },
-  { icon: Phone, label: "Phone", value: CONTACT_INFO.phone },
-  { icon: Mail, label: "Email", value: CONTACT_INFO.email },
-  { icon: Clock, label: "Beroperasi", value: CONTACT_INFO.hours.join(" · ") },
-];
 
 const initialForm = { nama: "", email: "", no_wa: "", pesan: "", honeypot: "" };
 
 export default function Contact() {
+  const { contactInfo, formEndpoint } = useCms();
   const scope = useRef(null);
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | error
   const [showModal, setShowModal] = useState(false);
   useScrollReveal(scope);
+
+  const FIELDS = [
+    { icon: MapPin, label: "Lokasi", value: contactInfo.address },
+    { icon: Phone, label: "Phone", value: contactInfo.phone },
+    { icon: Mail, label: "Email", value: contactInfo.email },
+    { icon: Clock, label: "Beroperasi", value: contactInfo.hours.join(" · ") },
+  ];
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -44,7 +45,7 @@ export default function Contact() {
       .join("&");
 
     try {
-      const res = await fetch(FORM_ENDPOINT, {
+      const res = await fetch(formEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encoded,
@@ -167,7 +168,7 @@ export default function Contact() {
             <div className="overflow-hidden rounded-2xl shadow-lg">
               <iframe
                 title="Lokasi 22Studio"
-                src={CONTACT_INFO.mapEmbed}
+                src={contactInfo.mapEmbed}
                 className="h-80 w-full lg:h-full lg:min-h-[420px]"
                 allowFullScreen
                 loading="lazy"

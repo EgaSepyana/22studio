@@ -4,8 +4,7 @@
 // Every function here returns the API's `data` payload on success and
 // throws an Error (with a user-facing `.message`) on failure.
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://22studio-payroll-system.vercel.app/api/public";
+import { API_BASE_URL } from "./apiConfig";
 
 class ApiError extends Error {
   constructor(message, status) {

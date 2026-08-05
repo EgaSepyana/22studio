@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, prefersReducedMotion } from "../../lib/gsap";
-import { CLIENTS } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 
 export default function ClientMarquee() {
+  const { clients } = useCms();
   const trackRef = useRef(null);
 
   useGSAP(
@@ -24,7 +25,7 @@ export default function ClientMarquee() {
     { scope: trackRef }
   );
 
-  const logos = [...CLIENTS, ...CLIENTS];
+  const logos = [...clients, ...clients];
 
   return (
     <section aria-label="Klien kami" className="border-y border-border bg-surface py-10">

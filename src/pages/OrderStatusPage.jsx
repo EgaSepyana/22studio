@@ -4,7 +4,7 @@ import { Loader2, Search, Home, ShoppingBag } from "lucide-react";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 import { fetchOrderTimeline } from "../services/orderTracking";
 import { decodeTrackingToken } from "../lib/trackingToken";
-import { WA_LINK } from "../data/content";
+import { useCms } from "../context/CmsContext";
 import MisprintGlyph from "../components/ui/MisprintGlyph";
 import OrderSummaryCard from "../components/tracking/OrderSummaryCard";
 import DesignApprovalCard from "../components/tracking/DesignApprovalCard";
@@ -17,6 +17,7 @@ const QUICK_LINKS = [
 ];
 
 export default function OrderStatusPage() {
+  const { waLink } = useCms();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("t");
   const scope = useRef(null);
@@ -92,7 +93,7 @@ export default function OrderStatusPage() {
               Cari Lagi
             </Link>
             <a
-              href={WA_LINK}
+              href={waLink}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full border-2 border-border px-8 py-3 font-medium text-ink transition-colors hover:border-primary hover:text-primary"

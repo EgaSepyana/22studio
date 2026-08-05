@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "../../lib/gsap";
-import { INK_SWATCHES } from "../../data/content";
+import { useCms } from "../../context/CmsContext";
 
 /**
  * The page's signature motif: a strip of spot-ink swatches, styled after
@@ -9,6 +9,7 @@ import { INK_SWATCHES } from "../../data/content";
  * chip "stamps" into place in sequence, echoing a squeegee pass per color.
  */
 export default function InkSwatchStrip({ className = "", animate = true }) {
+  const { inkSwatches } = useCms();
   const ref = useRef(null);
 
   useGSAP(
@@ -38,7 +39,7 @@ export default function InkSwatchStrip({ className = "", animate = true }) {
 
   return (
     <div ref={ref} className={`flex items-center gap-2 ${className}`} aria-hidden="true">
-      {INK_SWATCHES.map((swatch) => (
+      {inkSwatches.map((swatch) => (
         <div key={swatch.code} data-chip className="flex flex-col items-center gap-1">
           <span
             className="block h-5 w-5 rounded-sm shadow-sm ring-1 ring-black/10 dark:ring-white/10"
