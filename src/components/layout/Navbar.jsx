@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useCms } from "../../context/CmsContext";
 import ThemeToggle from "./ThemeToggle";
 
@@ -49,15 +49,13 @@ export default function Navbar() {
           <Link to="/catalog" className="font-medium text-ink/80 transition-colors hover:text-ink">
             Katalog
           </Link>
+          <ThemeToggle />
           <Link
             to="/lacak-order"
-            aria-label="Lacak Pesanan"
-            title="Lacak Pesanan"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink transition-colors hover:border-primary hover:text-primary"
+            className="rounded-full border-2 border-primary px-5 py-2 font-medium text-primary transition-colors hover:bg-primary hover:text-primary-ink"
           >
-            <Search className="h-4 w-4" />
+            Lacak Pesanan
           </Link>
-          <ThemeToggle />
           <Link
             to="/order"
             className="rounded-full bg-primary px-5 py-2 font-medium text-primary-ink transition-transform hover:-translate-y-0.5"
@@ -96,16 +94,22 @@ export default function Navbar() {
           <Link to="/catalog" onClick={() => setOpen(false)} className="py-2 font-medium text-ink/80">
             Katalog
           </Link>
-          <Link to="/lacak-order" onClick={() => setOpen(false)} className="py-2 font-medium text-ink/80">
-            Lacak Pesanan
-          </Link>
-          <Link
-            to="/order"
-            onClick={() => setOpen(false)}
-            className="mt-2 rounded-full bg-primary px-5 py-2.5 text-center font-medium text-primary-ink"
-          >
-            Order
-          </Link>
+          <div className="mt-2 flex gap-2">
+            <Link
+              to="/lacak-order"
+              onClick={() => setOpen(false)}
+              className="flex-1 rounded-full border-2 border-primary px-5 py-2.5 text-center font-medium text-primary"
+            >
+              Lacak Pesanan
+            </Link>
+            <Link
+              to="/order"
+              onClick={() => setOpen(false)}
+              className="flex-1 rounded-full bg-primary px-5 py-2.5 text-center font-medium text-primary-ink"
+            >
+              Order
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
